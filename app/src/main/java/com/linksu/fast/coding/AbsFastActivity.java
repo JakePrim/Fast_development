@@ -1,23 +1,20 @@
 package com.linksu.fast.coding;
 
 import android.os.Bundle;
-import android.widget.TextView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.linksu.fast.coding.baselibrary.BaseActivity;
+import com.linksu.fast.coding.baselibrary.base.BaseActivity;
+import com.linksu.fast.coding.baselibrary.base.LBaseActivity;
+import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.LogUtils;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
-public class AbsFastActivity extends BaseActivity {
+public class AbsFastActivity extends LBaseActivity {
 
-    static {
-        System.loadLibrary("native-lib");
+    @Override
+    protected void operateArgs() {
+
     }
 
     @Override
@@ -33,23 +30,22 @@ public class AbsFastActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_abs_fast, menu);
-        return true;
+    protected boolean openEventBus() {
+        return false;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void EventBean(BaseEventBusBean event) {
+
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
 }

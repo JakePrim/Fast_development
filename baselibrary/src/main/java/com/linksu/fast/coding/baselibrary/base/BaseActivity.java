@@ -1,7 +1,6 @@
-package com.linksu.fast.coding.baselibrary;
+package com.linksu.fast.coding.baselibrary.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -9,11 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.linksu.fast.coding.baselibrary.R;
+import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
-import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * ================================================
@@ -21,7 +24,7 @@ import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
  * 版    本：1.0
  * 创建日期：7/6 0006
  * 描    述：All is Activity extends BaseActivity
- * 封装常用的方法如:设置全屏、双击退出、Activity跳转等
+ * 管理布局基类
  * 修订历史：v1.0.0 first coding
  * ================================================
  */
@@ -35,9 +38,31 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseActivityManager.getInstance().addActivity(this);
+        initArgs();
+        operateArgs();
         init(savedInstanceState);
     }
+
+    /**
+     * 在布局之前需要完成的操作
+     */
+    protected void initArgs() {
+        BaseActivityManager.getInstance().addActivity(this);
+        if (openEventBus()) {
+            EventBus.getDefault().register(this);
+        }
+        if (getIntent() != null) {
+            Bundle extras = getIntent().getExtras();
+            if (null != getIntent().getExtras()) {
+                getBundleExtras(extras);
+            }
+        }
+    }
+
+    /**
+     * 子类 在加载布局之前的其他操作
+     */
+    protected abstract void operateArgs();
 
     /**
      * BaseActivity init
@@ -53,6 +78,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         initViewsAndEvent(savedInstanceState);
     }
 
+    /**
+     * 返回布局View
+     *
+     * @return getLayoutView
+     */
     protected View getLayoutView() {
         mBaseLayout = LayoutInflater.from(this).inflate(R.layout.lib_base_layout, null, false);
         mBaseContent = (FrameLayout) mBaseLayout.findViewById(R.id.lib_base_content);
@@ -62,20 +92,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mBaseContent.addView(contentView, layoutParams);
         }
         return mBaseLayout;
-    }
-
-    /**
-     * 自动转换id
-     *
-     * @param viewId
-     * @param <T>
-     * @return
-     */
-    protected <T extends View> T findAviewById(int viewId) {
-        if (viewId > 0) {
-            return (T) findViewById(viewId);
-        }
-        return null;
     }
 
     /**
@@ -90,48 +106,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected abstract int getContentViewById();
 
     /**
-     * 设置全屏
+     * eventbus 开关
+     *
+     * @return true 注册eventbus false 不注册eventbus
      */
-    protected void setFullScreen() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    protected void startToActivity(Class<?> targetActivityClass) {
-        startToActivity(targetActivityClass, null);
-    }
-
-    protected void startToActivity(Class<?> targetActivityClass, Bundle bundle) {
-        startToActivity(targetActivityClass, bundle, -1);
-    }
-
-    protected void startToActivity(Class<?> targetActiviyClass, int requestCode) {
-        startToActivity(targetActiviyClass, null, requestCode);
-    }
-
-    protected void startToActivity(Class<?> targetActiviyClass, Bundle bundle, int requestCode) {
-        Intent startIntent = new Intent(mContext, targetActiviyClass);
-        startToActivity(startIntent, bundle, requestCode);
-    }
+    protected abstract boolean openEventBus();
 
     /**
-     * 控制Activity的跳转方法
+     * Bundle  传递数据
      *
-     * @param startIntent intent
-     * @param bundle      bundle数据
-     * @param requestCode 请求码
+     * @param extras 得到Activity传递过来的数据
      */
-    private void startToActivity(Intent startIntent, Bundle bundle, int requestCode) {
-        if (startIntent != null) {
-            if (bundle != null) {
-                startIntent.putExtras(bundle);
-            }
-            if (requestCode != -1) {
-                startActivity(startIntent);
-            } else {
-                startActivityForResult(startIntent, requestCode);
-            }
-        }
-    }
+    protected abstract void getBundleExtras(Bundle extras);
 
     /**
      * all activity with click event
@@ -143,28 +129,32 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        BaseActivityManager.getInstance().removeActivity(this);
-    }
-
-    protected long quitTime = 0;
-
     /**
-     * 双击退出APP,监听onKeyDown事件
+     * eventbus在主线程接收方法
+     *
+     * @param event
      */
-    protected void doubleAppExit() {
-        if (System.currentTimeMillis() - quitTime >= 2000) {
-            ToastUtils.showShortSafe(getString(R.string.str_app_exit));
-            quitTime = System.currentTimeMillis();
-        } else {
-            BaseActivityManager.getInstance().AppExit(this);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(BaseEventBusBean event) {
+        if (event != null) {
+            EventBean(event);
         }
     }
+
+    /**
+     * EventBus接收信息的方法，开启后才会调用
+     *
+     * @param event
+     */
+    protected abstract void EventBean(BaseEventBusBean event);
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mBaseLayout = null;
+        BaseActivityManager.getInstance().removeActivity(this);
+        if (openEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

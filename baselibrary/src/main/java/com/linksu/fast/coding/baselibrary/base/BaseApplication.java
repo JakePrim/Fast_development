@@ -1,4 +1,4 @@
-package com.linksu.fast.coding.baselibrary;
+package com.linksu.fast.coding.baselibrary.base;
 
 import android.app.Application;
 import android.content.Context;
@@ -39,11 +39,31 @@ public abstract class BaseApplication extends Application {
                 .setLogFilter(LogUtils.V);// log过滤器，和logcat过滤器同理，默认Verbose
     }
 
+    /**
+     * log 的总开关 交给子类去决定
+     *
+     * @return
+     */
     protected abstract boolean isLogSwitch();
 
+    /**
+     * log 是否保存到文件交给子类去决定
+     *
+     * @return
+     */
     protected abstract boolean isFileSwitch();
 
+    /**
+     * log 输出日志是否带边框开关交给子类去决定
+     *
+     * @return
+     */
     protected abstract boolean isBorderSwitch();
 
+    /**
+     * log 设置log全局标签交给子类去决定
+     *
+     * @return
+     */
     protected abstract String getGlobalTag();
 }

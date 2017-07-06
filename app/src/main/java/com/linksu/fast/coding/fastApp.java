@@ -1,6 +1,6 @@
 package com.linksu.fast.coding;
 
-import com.linksu.fast.coding.baselibrary.BaseApplication;
+import com.linksu.fast.coding.baselibrary.base.BaseApplication;
 
 /**
  * ================================================
