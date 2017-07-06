@@ -10,53 +10,40 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class AbsFastActivity extends AppCompatActivity {
+import com.linksu.fast.coding.baselibrary.BaseActivity;
+import com.linksu.fast.coding.baselibrary.utils.LogUtils;
+import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
-    // Used to load the 'native-lib' library on application startup.
+public class AbsFastActivity extends BaseActivity {
+
     static {
         System.loadLibrary("native-lib");
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_abs_fast);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    protected void initViewsAndEvent(Bundle savedInstanceState) {
+//        setFullScreen();
+        ToastUtils.showShort("开始应用了");
+        LogUtils.json("ssssssssssssss");
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+    @Override
+    protected int getContentViewById() {
+        return R.layout.activity_abs_fast;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_abs_fast, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
