@@ -3,6 +3,9 @@ package com.linksu.fast.coding.baselibrary.manager;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+
+import com.linksu.fast.coding.baselibrary.utils.LogUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
  * 作    者：linksus
  * 版    本：1.0
  * 创建日期：7/6 0006
- * 描    述：Class Note:
+ * 描    述：Class Note: Activity 管理任务栈
  * use {@link LinkedList} to manage your activity stack
  * 修订历史：
  * ================================================
@@ -82,6 +85,7 @@ public class BaseActivityManager {
             activityMgr.killBackgroundProcesses(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
+            LogUtils.e("appexit Exception:", e.getMessage());
         }
     }
 

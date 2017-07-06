@@ -129,4 +129,11 @@ public abstract class LBaseActivity extends BaseActivity {
             BaseActivityManager.getInstance().AppExit(this);
         }
     }
+
+    /**
+     * 直接退出APP
+     */
+    protected void appExit() {
+        BaseActivityManager.getInstance().AppExit(this);
+    }
 }

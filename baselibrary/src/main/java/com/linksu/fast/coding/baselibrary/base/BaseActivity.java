@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * 版    本：1.0
  * 创建日期：7/6 0006
  * 描    述：All is Activity extends BaseActivity
- * 管理布局基类
+ * 通用的布局基类
  * 修订历史：v1.0.0 first coding
  * ================================================
  */
@@ -60,11 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * 子类 在加载布局之前的其他操作
-     */
-    protected abstract void operateArgs();
-
-    /**
      * BaseActivity init
      *
      * @param savedInstanceState
@@ -95,6 +90,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * 子类在加载布局之前的其他操作
+     */
+    protected abstract void operateArgs();
+
+    /**
      * init views and events here
      */
     protected abstract void initViewsAndEvent(Bundle savedInstanceState);
@@ -120,6 +120,25 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected abstract void getBundleExtras(Bundle extras);
 
     /**
+     * eventbus在主线程接收方法
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(BaseEventBusBean event) {
+        if (event != null) {
+            getEventBean(event);
+        }
+    }
+
+    /**
+     * EventBus接收信息的方法，开启后才会调用
+     *
+     * @param event
+     */
+    protected abstract void getEventBean(BaseEventBusBean event);
+
+    /**
      * all activity with click event
      *
      * @param v
@@ -129,24 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    /**
-     * eventbus在主线程接收方法
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(BaseEventBusBean event) {
-        if (event != null) {
-            EventBean(event);
-        }
-    }
-
-    /**
-     * EventBus接收信息的方法，开启后才会调用
-     *
-     * @param event
-     */
-    protected abstract void EventBean(BaseEventBusBean event);
 
     @Override
     protected void onDestroy() {
