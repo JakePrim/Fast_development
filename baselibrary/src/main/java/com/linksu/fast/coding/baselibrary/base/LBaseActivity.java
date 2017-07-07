@@ -1,5 +1,6 @@
 package com.linksu.fast.coding.baselibrary.base;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.linksu.fast.coding.baselibrary.R;
+import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
@@ -116,6 +118,31 @@ public abstract class LBaseActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 弹出系统的dialog
+     *
+     * @param title
+     * @param message
+     * @param positive
+     * @param negative
+     * @param listener
+     * @return Dialog 手动控制隐藏显示
+     */
+    protected void popupSysDialog(String title, String message, String positive, String negative, final SystemDialog.onSysDialogListener listener) {
+         SystemDialog.getInstance(this).onCreateDialog(title, message, positive, negative, listener);
+    }
+
+    //通用弹出框调用
+
+
+    //分享调用
+
+
+    //登录状态判断
+
+
+    //滚动到顶部
+
     protected long quitTime = 0;
 
     /**
@@ -136,4 +163,5 @@ public abstract class LBaseActivity extends BaseActivity {
     protected void appExit() {
         BaseActivityManager.getInstance().AppExit(this);
     }
+
 }
