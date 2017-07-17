@@ -22,6 +22,7 @@ public class AbsFastActivity extends LBaseActivity {
 //        setFullScreen();
         ToastUtils.showShort("开始应用了");
         LogUtils.json("ssssssssssssss");
+        loadData();
     }
 
     @Override

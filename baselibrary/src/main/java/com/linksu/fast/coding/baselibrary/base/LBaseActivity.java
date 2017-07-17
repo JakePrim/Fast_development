@@ -15,8 +15,8 @@ import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
  * 作    者：linksus
  * 版    本：1.0
  * 创建日期：7/6 0006
- * 描    述：通用操作基类
- * 修订历史：
+ * 描    述：通用操作基类,若不是MVP MVVM 模式 都继承此类
+ * 修订历史：v1.0.0 first coding
  * ================================================
  */
 public abstract class LBaseActivity extends BaseActivity {
