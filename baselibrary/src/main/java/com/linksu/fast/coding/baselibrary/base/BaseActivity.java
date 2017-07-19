@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import com.linksu.fast.coding.baselibrary.R;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
+import com.linksu.fast.coding.baselibrary.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -90,6 +91,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * 获取LayoutInflater
+     *
+     * @return
+     */
+    public LayoutInflater getLayoutInflater() {
+        LayoutInflater _layoutinflater = LayoutInflater.from(this);
+        return _layoutinflater;
+    }
+
+    /**
      * 子类在加载布局之前的其他操作
      */
     protected abstract void operateArgs();
@@ -145,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      */
     @Override
     public void onClick(View v) {
-
+        LogUtils.v("onClick");
     }
 
 
