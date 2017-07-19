@@ -29,6 +29,7 @@ public class AbsFastActivity extends LBaseActivity {
         ToastUtils.showShort("开始应用了");
         LogUtils.json("ssssssssssssss");
         findAviewById(R.id.fab).setOnClickListener(this);
+        loadData();
     }
 
     @Override
