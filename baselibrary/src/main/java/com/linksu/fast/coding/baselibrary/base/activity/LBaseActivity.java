@@ -1,6 +1,5 @@
-package com.linksu.fast.coding.baselibrary.base;
+package com.linksu.fast.coding.baselibrary.base.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,11 +21,6 @@ import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
  * ================================================
  */
 public abstract class LBaseActivity extends BaseActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     /**
      * 加载数据 具体在哪里调用交给子类去调用实现

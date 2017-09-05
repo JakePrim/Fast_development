@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/Fast_development.iml" filepath="$PROJECT_DIR$/Fast_development.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/baselibrary/baselibrary.iml" filepath="$PROJECT_DIR$/baselibrary/baselibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kotlin-base-library/kotlin-base-library.iml" filepath="$PROJECT_DIR$/kotlin-base-library/kotlin-base-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nethttplibrary/nethttplibrary.iml" filepath="$PROJECT_DIR$/nethttplibrary/nethttplibrary.iml" />
     </modules>
   </component>
 </project>

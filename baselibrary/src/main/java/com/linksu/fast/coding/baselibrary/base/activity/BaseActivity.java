@@ -1,4 +1,4 @@
-package com.linksu.fast.coding.baselibrary.base;
+package com.linksu.fast.coding.baselibrary.base.activity;
 
 import android.content.Context;
 import android.os.Bundle;

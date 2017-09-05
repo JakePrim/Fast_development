@@ -10,6 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/baselibrary" />
+            <option value="$PROJECT_DIR$/kotlin-base-library" />
+            <option value="$PROJECT_DIR$/nethttplibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

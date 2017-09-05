@@ -1,4 +1,4 @@
-package com.linksu.fast.coding.baselibrary.base;
+package com.linksu.fast.coding.baselibrary.base.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

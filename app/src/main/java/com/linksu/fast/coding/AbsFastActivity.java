@@ -3,12 +3,9 @@ package com.linksu.fast.coding;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.linksu.fast.coding.baselibrary.base.BaseActivity;
-import com.linksu.fast.coding.baselibrary.base.LBaseActivity;
+import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.LogUtils;
