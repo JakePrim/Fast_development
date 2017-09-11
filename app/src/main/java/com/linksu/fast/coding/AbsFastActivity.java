@@ -3,6 +3,7 @@ package com.linksu.fast.coding;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -24,6 +25,11 @@ public class AbsFastActivity extends LBaseActivity {
     protected Dialog dialog;
 
     @Override
+    protected void onRetryClick() {
+
+    }
+
+    @Override
     protected void operateArgs() {
 
     }
@@ -34,6 +40,7 @@ public class AbsFastActivity extends LBaseActivity {
         ToastUtils.showShort("开始应用了");
         LogUtils.json("ssssssssssssss");
         findAviewById(R.id.fab).setOnClickListener(this);
+        showEmptyView();
         loadData();
     }
 
@@ -59,6 +66,8 @@ public class AbsFastActivity extends LBaseActivity {
 
     @Override
     protected void loadData() {
+//        showErrorView();
+        showContentView();
         // 测试 SDK 是否正常工作的代码
 //        AVObject testObject = new AVObject("TestProject");
 //        testObject.put("words", "Hello World!");
@@ -90,6 +99,13 @@ public class AbsFastActivity extends LBaseActivity {
             @Override
             public void onResponse(int action, Object data) {
                 LogUtils.d("action:" + action);
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showContentView();
+                    }
+                });
+
             }
         });
         init.get("http://api.douban.com/v2/movie/subject/1764796", 1, TestBean.class);

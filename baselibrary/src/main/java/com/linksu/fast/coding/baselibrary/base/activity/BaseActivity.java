@@ -6,16 +6,19 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.linksu.fast.coding.baselibrary.R;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
 import com.linksu.fast.coding.baselibrary.utils.LogUtils;
+import com.linksu.fast.coding.baselibrary.widget.MultipleStatusView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +39,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected String TAG = "";
     protected Context mContext;
     protected View mBaseLayout;
-    protected FrameLayout mBaseContent;
+    public RelativeLayout content_view;
+    public MultipleStatusView statusView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,16 +89,57 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected View getLayoutView() {
         if (mBaseLayout == null) { // 防止每个Activity 都inflate view(Prevent each Activity from inflate view)
             mBaseLayout = LayoutInflater.from(this).inflate(R.layout.lib_base_layout, null, false);
-            mBaseContent = (FrameLayout) mBaseLayout.findViewById(R.id.lib_base_content);
+            statusView = (MultipleStatusView) mBaseLayout.findViewById(R.id.main_multiplestatusview);
+            content_view = (RelativeLayout) mBaseLayout.findViewById(R.id.content_view);
         }
+        initListener();
         if (getContentViewById() != 0) {
-            mBaseContent.removeAllViews();
+            Log.e("linksu",
+                "getLayoutView(BaseActivity.java:97)");
+            content_view.removeAllViews();
             View contentView = LayoutInflater.from(this).inflate(getContentViewById(), null);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            contentView.setLayoutParams(layoutParams);
-            mBaseContent.addView(contentView);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            content_view.addView(contentView, params);
         }
         return mBaseLayout;
+    }
+
+    /**
+     * 初始化监听
+     */
+    protected void initListener() {
+        statusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                statusView.showLoading();
+                onRetryClick();
+            }
+        });
+    }
+
+    /**
+     * 错误等界面的点击事件处理
+     */
+    protected abstract void onRetryClick();
+
+    protected void showContentView() {
+        statusView.showContent();
+    }
+
+    protected void showEmptyView() {
+        statusView.showEmpty();
+    }
+
+    protected void showErrorView() {
+        statusView.showError();
+    }
+
+    protected void showLoadingView() {
+        statusView.showLoading();
+    }
+
+    protected void showNoNetworkView() {
+        statusView.showNoNetwork();
     }
 
     /**
