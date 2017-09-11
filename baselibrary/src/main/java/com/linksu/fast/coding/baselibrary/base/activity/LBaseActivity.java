@@ -11,6 +11,9 @@ import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
+import weather.linksu.com.nethttplibrary.HttpClient;
+import weather.linksu.com.nethttplibrary.HttpUtil;
+
 /**
  * ================================================
  * 作    者：linksus
@@ -21,6 +24,18 @@ import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
  * ================================================
  */
 public abstract class LBaseActivity extends BaseActivity {
+
+    public HttpUtil httpUtil;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        httpUtil = HttpUtil.getInstance();
+        super.onCreate(savedInstanceState);
+    }
+
+    protected void setHttpClient(HttpClient httpClient) {
+        httpUtil.setHttpClient(httpClient);
+    }
 
     /**
      * 加载数据 具体在哪里调用交给子类去调用实现
@@ -123,7 +138,7 @@ public abstract class LBaseActivity extends BaseActivity {
      * @return
      */
     protected void popupSysDialog(String title, String message, String positive, String negative, final SystemDialog.onSysDialogListener listener) {
-         SystemDialog.getInstance().onCreateDialog(this,title, message, positive, negative, listener);
+        SystemDialog.getInstance().onCreateDialog(this, title, message, positive, negative, listener);
     }
 
     //通用弹出框调用

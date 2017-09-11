@@ -1,5 +1,7 @@
 package weather.linksu.com.nethttplibrary;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import weather.linksu.com.nethttplibrary.okhttp.OkClient;
@@ -17,6 +19,7 @@ public class HttpUtil {
 
     private static HttpUtil httpUtil;
     private HttpClient httpClient;
+    private static String TAG = "HttpUtil";
 
     public HttpUtil() {
         httpClient = new OkClient();//默认为OkHttp
@@ -52,9 +55,12 @@ public class HttpUtil {
      *
      * @param url
      */
-    public void get(String url, int action, Class  cla) {
-        httpClient.getSuperclassTypeParameter(cla);
-        httpClient.get(url, action);
+    public void get(String url, int action, Class cla) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.getSuperclassTypeParameter(cla);
+            httpClient.get(url, action);
+        }
+
     }
 
     /**
@@ -64,8 +70,10 @@ public class HttpUtil {
      * @param param
      */
     public void post(String url, Map<String, String> param, int action, Class cla) {
-        httpClient.getSuperclassTypeParameter(cla);
-        httpClient.post(url, param, action);
+        if (checkHttpClient(httpClient)) {
+            httpClient.getSuperclassTypeParameter(cla);
+            httpClient.post(url, param, action);
+        }
     }
 
     /**
@@ -75,6 +83,20 @@ public class HttpUtil {
      */
     public void setCallBack(BaseCallback callBack) {
         httpClient.setCallBack(callBack);
+    }
+
+    /**
+     * 检查网络请求客户端，是否为null
+     *
+     * @param httpClient
+     * @return
+     */
+    private boolean checkHttpClient(HttpClient httpClient) {
+        if (null == httpClient) {
+            Log.e(TAG, "get: HttpClient is null,please setHttpClient(HttpClient httpClient) ");
+            return false;
+        }
+        return true;
     }
 
 }

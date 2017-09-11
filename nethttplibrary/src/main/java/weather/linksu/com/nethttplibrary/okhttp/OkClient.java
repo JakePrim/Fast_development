@@ -1,5 +1,6 @@
 package weather.linksu.com.nethttplibrary.okhttp;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.internal.$Gson$Types;
@@ -35,6 +36,8 @@ public class OkClient implements HttpClient {
     private OkHttpClient okHttpClient;
     private OkCallBack callBack;
     private Class type;
+    private Handler mHandler;
+    private static String TAG = "OkClient";
 
     public OkClient() {
         okHttpClient = new OkHttpClient();
@@ -42,6 +45,7 @@ public class OkClient implements HttpClient {
         builder.connectTimeout(10, TimeUnit.SECONDS);
         builder.readTimeout(10, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
+        mHandler = new Handler();
     }
 
 
@@ -77,7 +81,8 @@ public class OkClient implements HttpClient {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callBack.onFailure(action, "", e);
+//                callBack.onFailure(action, "网络错误,请稍后重试", e);
+                callbackFailure(action, "网络错误,请稍后重试", e);
             }
 
             @Override
@@ -87,16 +92,49 @@ public class OkClient implements HttpClient {
                     Log.e("doRequest", "onResponse: " + result);
                     try {
                         Object object = GsonUtill.getObejctFromJSON(result, type);
-                        callBack.onResponse(action, object);
+//                        callBack.onResponse(action, object);
+                        callbackSuccess(action, object);
                     } catch (Exception e) {
                         callBack.OnJsonParseError(response, e);
                     }
                 } else {
-                    callBack.onFailure(action, response.message(), null);
+//                    callBack.onFailure(action, response.message(), null);
+                    callbackFailure(action, response.message(), null);
                 }
             }
         });
     }
+
+    /**
+     * 需要主要Handler中进行界面更新操作
+     *
+     * @param action
+     * @param object
+     */
+    private void callbackSuccess(final int action, final Object object) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callBack != null)
+                    callBack.onResponse(action, object);
+                else
+                    Log.e(TAG, "run: callBack is null ,please set callBack");
+            }
+        });
+    }
+
+    private void callbackFailure(final int action, final String msg, final Exception e) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callBack != null)
+                    callBack.onFailure(action, msg, e);
+                else
+                    Log.e(TAG, "run: callBack is null ,please set callBack");
+            }
+        });
+    }
+
 
     /**
      * 返回 Request

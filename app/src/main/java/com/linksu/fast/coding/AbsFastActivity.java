@@ -19,8 +19,9 @@ import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 import okhttp3.Response;
 import weather.linksu.com.nethttplibrary.HttpUtil;
 import weather.linksu.com.nethttplibrary.okhttp.OkCallBack;
+import weather.linksu.com.nethttplibrary.okhttp.OkClient;
 
-public class AbsFastActivity extends LBaseActivity {
+public class AbsFastActivity extends LBaseActivity implements OkCallBack {
 
     protected Dialog dialog;
 
@@ -40,7 +41,6 @@ public class AbsFastActivity extends LBaseActivity {
         ToastUtils.showShort("开始应用了");
         LogUtils.json("ssssssssssssss");
         findAviewById(R.id.fab).setOnClickListener(this);
-        showEmptyView();
         loadData();
     }
 
@@ -66,8 +66,6 @@ public class AbsFastActivity extends LBaseActivity {
 
     @Override
     protected void loadData() {
-//        showErrorView();
-        showContentView();
         // 测试 SDK 是否正常工作的代码
 //        AVObject testObject = new AVObject("TestProject");
 //        testObject.put("words", "Hello World!");
@@ -79,36 +77,9 @@ public class AbsFastActivity extends LBaseActivity {
 //                }
 //            }
 //        });
-        HttpUtil init = HttpUtil.getInstance();
-        init.setCallBack(new OkCallBack() {
-            @Override
-            public void OnJsonParseError(Response response, Exception e) {
-
-            }
-
-            @Override
-            public void onLoadRequest(Object request) {
-
-            }
-
-            @Override
-            public void onFailure(int action, Object data, Exception e) {
-
-            }
-
-            @Override
-            public void onResponse(int action, Object data) {
-                LogUtils.d("action:" + action);
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showContentView();
-                    }
-                });
-
-            }
-        });
-        init.get("http://api.douban.com/v2/movie/subject/1764796", 1, TestBean.class);
+//        setHttpClient(new OkClient());
+        httpUtil.setCallBack(this);
+        httpUtil.get("http://api.douban.com/v2/movie/subject/1764796", 1, TestBean.class);
     }
 
     @Override
@@ -129,5 +100,26 @@ public class AbsFastActivity extends LBaseActivity {
                 });
                 break;
         }
+    }
+
+    @Override
+    public void OnJsonParseError(Response response, Exception e) {
+        ToastUtils.showShortSafe("json解析异常");
+    }
+
+    @Override
+    public void onLoadRequest(Object request) {
+        showLoadingView();
+    }
+
+    @Override
+    public void onFailure(int action, Object data, Exception e) {
+        showErrorView();
+        ToastUtils.showShortSafe(data.toString());
+    }
+
+    @Override
+    public void onResponse(int action, Object data) {
+        showContentView();
     }
 }
