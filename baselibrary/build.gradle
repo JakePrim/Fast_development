@@ -31,7 +31,7 @@ dependencies {
     compile rootProject.ext.dependencies["recyclerview-v7"]
     compile rootProject.ext.dependencies["cardview-v7"]
     compile rootProject.ext.dependencies["glide"]
-    compile rootProject.ext.dependencies["gson"]
     compile rootProject.ext.dependencies["eventbus"]
+    compile project(":nethttplibrary")
     testCompile 'junit:junit:4.12'
 }

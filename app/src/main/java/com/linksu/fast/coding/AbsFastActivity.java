@@ -3,13 +3,21 @@ package com.linksu.fast.coding;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.LogUtils;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
+
+import okhttp3.Response;
+import weather.linksu.com.nethttplibrary.HttpUtil;
+import weather.linksu.com.nethttplibrary.okhttp.OkCallBack;
 
 public class AbsFastActivity extends LBaseActivity {
 
@@ -51,7 +59,40 @@ public class AbsFastActivity extends LBaseActivity {
 
     @Override
     protected void loadData() {
+        // 测试 SDK 是否正常工作的代码
+//        AVObject testObject = new AVObject("TestProject");
+//        testObject.put("words", "Hello World!");
+//        testObject.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(AVException e) {
+//                if (e == null) {
+//                    Log.d("saved", "success!");
+//                }
+//            }
+//        });
+        HttpUtil init = HttpUtil.getInstance();
+        init.setCallBack(new OkCallBack() {
+            @Override
+            public void OnJsonParseError(Response response, Exception e) {
 
+            }
+
+            @Override
+            public void onLoadRequest(Object request) {
+
+            }
+
+            @Override
+            public void onFailure(int action, Object data, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(int action, Object data) {
+                LogUtils.d("action:" + action);
+            }
+        });
+        init.get("http://api.douban.com/v2/movie/subject/1764796", 1, TestBean.class);
     }
 
     @Override

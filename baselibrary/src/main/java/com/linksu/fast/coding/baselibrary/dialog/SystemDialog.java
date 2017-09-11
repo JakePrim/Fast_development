@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
+import com.linksu.fast.coding.baselibrary.base.BaseApplication;
+
 /**
  * ================================================
  * 作    者：linksus
@@ -16,23 +18,22 @@ import android.text.TextUtils;
  * ================================================
  */
 public class SystemDialog {
-    protected Context context;
     protected static SystemDialog dialog;
 
-    public static SystemDialog getInstance(Context context) {
+    public static SystemDialog getInstance() {
         if (dialog == null) {
             synchronized (SystemDialog.class) {
                 if (dialog == null) {
-                    dialog = new SystemDialog(context);
+                    dialog = new SystemDialog();
                 }
             }
         }
         return dialog;
     }
 
-    public SystemDialog(Context context) {
-        this.context = context;
+    public SystemDialog() {
     }
+
 
     /**
      * 创建一个dialog
@@ -44,7 +45,7 @@ public class SystemDialog {
      * @param listener
      * @return
      */
-    public void onCreateDialog(String title, String message, String positive, String negative, final onSysDialogListener listener) {
+    public void onCreateDialog(Context context,String title, String message, String positive, String negative, final onSysDialogListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(title);
         builder.setTitle(message);

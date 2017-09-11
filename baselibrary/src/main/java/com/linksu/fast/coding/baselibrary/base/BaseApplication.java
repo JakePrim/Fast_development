@@ -18,10 +18,19 @@ import com.linksu.fast.coding.baselibrary.utils.Utils;
  */
 public abstract class BaseApplication extends Application {
 
+    private static BaseApplication mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
         initUtils();
+    }
+
+    /**
+     * 获取Application
+     */
+    public static Context getAppContext() {
+        return mInstance.getApplicationContext();
     }
 
     /**

@@ -37,7 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected Context mContext;
     protected View mBaseLayout;
     protected FrameLayout mBaseContent;
-    protected ProgressBar mBaseLoading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,12 +86,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (mBaseLayout == null) { // 防止每个Activity 都inflate view(Prevent each Activity from inflate view)
             mBaseLayout = LayoutInflater.from(this).inflate(R.layout.lib_base_layout, null, false);
             mBaseContent = (FrameLayout) mBaseLayout.findViewById(R.id.lib_base_content);
-            mBaseLoading = (ProgressBar) mBaseLayout.findViewById(R.id.lib_base_loading);
         }
         if (getContentViewById() != 0) {
-            View contentView = LayoutInflater.from(this).inflate(getContentViewById(), null, false);
+            mBaseContent.removeAllViews();
+            View contentView = LayoutInflater.from(this).inflate(getContentViewById(), null);
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            mBaseContent.addView(contentView, layoutParams);
+            contentView.setLayoutParams(layoutParams);
+            mBaseContent.addView(contentView);
         }
         return mBaseLayout;
     }

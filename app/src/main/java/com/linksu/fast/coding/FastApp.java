@@ -1,5 +1,8 @@
 package com.linksu.fast.coding;
 
+import android.content.Context;
+
+import com.avos.avoscloud.AVOSCloud;
 import com.linksu.fast.coding.baselibrary.base.BaseApplication;
 
 /**
@@ -11,10 +14,24 @@ import com.linksu.fast.coding.baselibrary.base.BaseApplication;
  * 修订历史：
  * ================================================
  */
-public class fastApp extends BaseApplication {
+public class FastApp extends BaseApplication {
+
+    private static FastApp mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this, "44lwlOKiTbmYvGToxIggkHj3-gzGzoHsz", "Rk911hC66tLEadVHF2G42p8y");
+        AVOSCloud.setDebugLogEnabled(true);//开启调试日志
+    }
+
+    /**
+     * 获取Application
+     */
+    public static Context getAppContext() {
+        return mInstance.getApplicationContext();
     }
 
     @Override

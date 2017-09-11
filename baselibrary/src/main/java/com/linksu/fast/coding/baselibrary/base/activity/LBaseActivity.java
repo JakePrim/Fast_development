@@ -120,10 +120,10 @@ public abstract class LBaseActivity extends BaseActivity {
      * @param positive
      * @param negative
      * @param listener
-     * @return Dialog 手动控制隐藏显示
+     * @return
      */
     protected void popupSysDialog(String title, String message, String positive, String negative, final SystemDialog.onSysDialogListener listener) {
-         SystemDialog.getInstance(this).onCreateDialog(title, message, positive, negative, listener);
+         SystemDialog.getInstance().onCreateDialog(this,title, message, positive, negative, listener);
     }
 
     //通用弹出框调用
