@@ -104,58 +104,30 @@ public class OkClient implements HttpClient {
      * @param request
      */
     public void doRequest(final Request request, final int action) {
-        Observable<Call> observable = Observable.create(new ObservableOnSubscribe<Call>() {
+        callBack.onLoadRequest(request);
+        call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<Call> e) throws Exception {
-                call = okHttpClient.newCall(request);
-                e.onNext(call);
+            public void onFailure(Call call, IOException e) {
+                callbackFailure(action, "网络错误,请稍后重试", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
+                    Log.e("doRequest", "onResponse: " + result);
+                    try {
+                        Object object = GsonUtill.getObejctFromJSON(result, type);
+                        callbackSuccess(action, object);
+                    } catch (Exception e) {
+                        callbackFailure(action, "Json 解析异常", e);
+                    }
+                } else {
+                    callbackFailure(action, response.message(), null);
+                }
             }
         });
-        observable.subscribeOn(Schedulers.io())//网络请求在子线程中
-                .observeOn(AndroidSchedulers.mainThread())//请求成功在主线程中
-                .subscribe(new Observer<Call>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        disposable = d;
-                        callBack.onLoadRequest(request);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Call call) {
-                        call.enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                callbackFailure(action, "网络错误,请稍后重试", e);
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                if (response.isSuccessful()) {
-                                    String result = response.body().string();
-                                    Log.e("doRequest", "onResponse: " + result);
-                                    try {
-                                        Object object = GsonUtill.getObejctFromJSON(result, type);
-                                        callbackSuccess(action, object);
-                                    } catch (Exception e) {
-
-                                    }
-                                } else {
-                                    callbackFailure(action, response.message(), null);
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        callBack.onFailure(action, "网络错误,请稍后重试", null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        disposable.dispose();
-                    }
-                });
     }
 
     /**

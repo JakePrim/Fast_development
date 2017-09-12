@@ -124,7 +124,7 @@ public class RetrofitClient implements HttpClient {
                     @Override
                     public void onQuestResult(@NonNull ResponseBody responseBody) {
                         try {
-                            String result = responseBody.string().toString();
+                            String result = responseBody.string();
                             Object object = GsonUtill.getObejctFromJSON(result, subclass);
                             callback.onResponse(action, object);
                         } catch (IOException e) {

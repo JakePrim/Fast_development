@@ -1,17 +1,13 @@
 package com.linksu.fast.coding;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
-import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
-import com.linksu.fast.coding.baselibrary.utils.LogUtils;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
-
-import weather.linksu.com.nethttplibrary.BaseCallback;
 
 public class AbsFastActivity extends LBaseActivity {
 
@@ -20,12 +16,14 @@ public class AbsFastActivity extends LBaseActivity {
 
     @Override
     protected void operateArgs() {
-
+        Log.e("linksu",
+                "operateArgs(AbsFastActivity.java:20)");
     }
 
     @Override
     protected void initViewsAndEvent(Bundle savedInstanceState) {
-        findAviewById(R.id.fab).setOnClickListener(this);
+        Log.e("linksu",
+                "initViewsAndEvent(AbsFastActivity.java:26)");
         tv_test = findAviewById(R.id.tv_test);
         loadData();
     }
@@ -61,19 +59,6 @@ public class AbsFastActivity extends LBaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.fab:
-                popupSysDialog("测试", "测试系统弹出框", "确定", "取消", new SystemDialog.onSysDialogListener() {
-                    @Override
-                    public void onPositive(DialogInterface dialog) {
-                        ToastUtils.showShort("确定");
-                    }
-
-                    @Override
-                    public void onNegative(DialogInterface dialog) {
-                        ToastUtils.showShort("取消");
-                    }
-                });
-                break;
         }
     }
 

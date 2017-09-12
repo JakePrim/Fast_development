@@ -45,27 +45,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initArgs();
-        operateArgs();
         init(savedInstanceState);
     }
 
-    /**
-     * 在布局之前需要完成的通用操作
-     * 一般都是获取Intent 的传值，eventbus 传值
-     */
-    protected void initArgs() {
-        BaseActivityManager.getInstance().addActivity(this);
-        if (openEventBus()) {
-            EventBus.getDefault().register(this);
-        }
-        if (getIntent() != null) {
-            Bundle extras = getIntent().getExtras();
-            if (null != getIntent().getExtras()) {
-                getBundleExtras(extras);
-            }
-        }
-    }
 
     /**
      * BaseActivity init
@@ -94,8 +76,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
         initListener();
         if (getContentViewById() != 0) {
-            Log.e("linksu",
-                "getLayoutView(BaseActivity.java:97)");
             content_view.removeAllViews();
             View contentView = LayoutInflater.from(this).inflate(getContentViewById(), null);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -143,21 +123,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * 获取LayoutInflater
-     *
-     * @return
-     */
-    @NonNull
-    public LayoutInflater getLayoutInflater() {
-        return LayoutInflater.from(this);
-    }
-
-    /**
-     * 子类在加载布局之前的其他操作
-     */
-    protected abstract void operateArgs();
-
-    /**
      * init views and events here
      */
     protected abstract void initViewsAndEvent(Bundle savedInstanceState);
@@ -169,56 +134,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected abstract int getContentViewById();
 
     /**
-     * eventbus 开关
-     *
-     * @return true 注册eventbus false 不注册eventbus
-     */
-    protected abstract boolean openEventBus();
-
-    /**
-     * Bundle  传递数据
-     *
-     * @param extras 得到Activity传递过来的数据
-     */
-    protected abstract void getBundleExtras(Bundle extras);
-
-    /**
-     * eventbus在主线程接收方法
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(BaseEventBusBean event) {
-        if (event != null) {
-            getEventBean(event);
-        }
-    }
-
-    /**
-     * EventBus接收信息的方法，开启后才会调用
-     *
-     * @param event
-     */
-    protected abstract void getEventBean(BaseEventBusBean event);
-
-    /**
      * all activity with click event
      *
      * @param v
      */
     @Override
     public void onClick(View v) {
-        LogUtils.v("onClick");
-    }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBaseLayout = null;
-        BaseActivityManager.getInstance().removeActivity(this);
-        if (openEventBus()) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 }

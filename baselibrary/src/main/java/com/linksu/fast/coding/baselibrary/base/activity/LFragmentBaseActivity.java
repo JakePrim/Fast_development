@@ -1,5 +1,7 @@
 package com.linksu.fast.coding.baselibrary.base.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 
 import com.linksu.fast.coding.baselibrary.base.fragment.BaseFragment;
@@ -18,8 +20,23 @@ public abstract class LFragmentBaseActivity extends LBaseActivity {
     // 布局中fragment的ID
     protected abstract int getFragmentContentId();
 
+    //获取第一个fragment
+    protected abstract BaseFragment getFirstFragment();
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //避免重复添加Fragment
+        if (null == getSupportFragmentManager().getFragments()) {
+            BaseFragment firstFragment = getFirstFragment();
+            if (null != firstFragment) {
+                addFragment(firstFragment);
+            }
+        }
+    }
+
     // 添加fragment
-    protected void addFragment(BaseFragment fragment) {
+    public void addFragment(BaseFragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -30,7 +47,7 @@ public abstract class LFragmentBaseActivity extends LBaseActivity {
     }
 
     // 移除Fragment
-    protected void removeFragment() {
+    public void removeFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         } else {

@@ -2,17 +2,23 @@ package com.linksu.fast.coding.baselibrary.base.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.linksu.fast.coding.baselibrary.R;
 import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
+import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import weather.linksu.com.nethttplibrary.BaseCallback;
-import weather.linksu.com.nethttplibrary.HttpClient;
 import weather.linksu.com.nethttplibrary.HttpUtil;
 import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
 
@@ -34,13 +40,81 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
         httpUtil = HttpUtil.getInstance();
         httpUtil.setHttpClient(new RetrofitClient(this));
         httpUtil.setCallBack(this);
+        initArgs();
+        operateArgs();//在加载布局之前的操作
         super.onCreate(savedInstanceState);
     }
+
+    /**
+     * 在布局之前需要完成的通用操作
+     * 一般都是获取Intent 的传值，eventbus 传值
+     */
+    protected void initArgs() {
+        BaseActivityManager.getInstance().addActivity(this);
+        if (openEventBus()) {
+            EventBus.getDefault().register(this);
+        }
+        if (getIntent() != null) {
+            Bundle extras = getIntent().getExtras();
+            if (null != getIntent().getExtras()) {
+                getBundleExtras(extras);
+            }
+        }
+    }
+
+    /**
+     * 子类在加载布局之前的其他操作
+     */
+    protected abstract void operateArgs();
 
     /**
      * 加载数据 具体在哪里调用交给子类去调用实现
      */
     protected abstract void loadData();
+
+    /**
+     * eventbus 开关
+     *
+     * @return true 注册eventbus false 不注册eventbus
+     */
+    protected abstract boolean openEventBus();
+
+    /**
+     * Bundle  传递数据
+     *
+     * @param extras 得到Activity传递过来的数据
+     */
+    protected abstract void getBundleExtras(Bundle extras);
+
+    /**
+     * eventbus在主线程接收方法
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(BaseEventBusBean event) {
+        if (event != null) {
+            getEventBean(event);
+        }
+    }
+
+    /**
+     * EventBus接收信息的方法，开启后才会调用
+     *
+     * @param event
+     */
+    protected abstract void getEventBean(BaseEventBusBean event);
+
+    /**
+     * 获取LayoutInflater
+     *
+     * @return
+     */
+    @NonNull
+    public LayoutInflater getLayoutInflater() {
+        return LayoutInflater.from(this);
+    }
+
 
     /**
      * 自动转换id 类型
@@ -55,6 +129,7 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
         }
         return null;
     }
+
 
     /**
      * 设置全屏
@@ -176,5 +251,15 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (openEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
+        mBaseLayout = null;
+        BaseActivityManager.getInstance().removeActivity(this);
     }
 }
