@@ -22,7 +22,7 @@ public class HttpUtil {
     private static String TAG = "HttpUtil";
 
     public HttpUtil() {
-        httpClient = new OkClient();//默认为OkHttp
+        httpClient = new OkClient();
     }
 
     /**

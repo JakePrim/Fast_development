@@ -11,30 +11,30 @@ import com.linksu.fast.coding.baselibrary.dialog.SystemDialog;
 import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
+import weather.linksu.com.nethttplibrary.BaseCallback;
 import weather.linksu.com.nethttplibrary.HttpClient;
 import weather.linksu.com.nethttplibrary.HttpUtil;
+import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
 
 /**
  * ================================================
  * 作    者：linksus
  * 版    本：1.0
  * 创建日期：7/6 0006
- * 描    述：通用操作基类,若不是MVP MVVM 模式 都继承此类
+ * 描    述：通用操作基类,MVP MVVM 模式 都继承此类
  * 修订历史：v1.0.0 first coding
  * ================================================
  */
-public abstract class LBaseActivity extends BaseActivity {
+public abstract class LBaseActivity extends BaseActivity implements BaseCallback {
 
     public HttpUtil httpUtil;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         httpUtil = HttpUtil.getInstance();
+        httpUtil.setHttpClient(new RetrofitClient(this));
+        httpUtil.setCallBack(this);
         super.onCreate(savedInstanceState);
-    }
-
-    protected void setHttpClient(HttpClient httpClient) {
-        httpUtil.setHttpClient(httpClient);
     }
 
     /**
@@ -43,7 +43,7 @@ public abstract class LBaseActivity extends BaseActivity {
     protected abstract void loadData();
 
     /**
-     * 自动转换id
+     * 自动转换id 类型
      *
      * @param viewId
      * @param <T>
@@ -173,4 +173,8 @@ public abstract class LBaseActivity extends BaseActivity {
         BaseActivityManager.getInstance().AppExit(this);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
