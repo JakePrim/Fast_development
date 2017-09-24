@@ -129,8 +129,12 @@ public class RetrofitClient implements HttpClient {
                         try {
                             Log.e(TAG, "onQuestResult: retrofit request success");
                             String result = responseBody.string();
-                            Object object = GsonUtill.getObejctFromJSON(result, subclass);
-                            callback.onResponse(action, object);
+                            if (null != subclass) {
+                                Object object = GsonUtill.getObejctFromJSON(result, subclass);
+                                callback.onResponse(action, object);
+                            } else {
+                                callback.onResponse(action, result);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -164,8 +168,12 @@ public class RetrofitClient implements HttpClient {
                         String result = null;
                         try {
                             result = responseBody.string();
-                            Object object = GsonUtill.getObejctFromJSON(result, subclass);
-                            callback.onResponse(action, responseBody);
+                            if (null != subclass) {
+                                Object object = GsonUtill.getObejctFromJSON(result, subclass);
+                                callback.onResponse(action, object);
+                            } else {
+                                callback.onResponse(action, result);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

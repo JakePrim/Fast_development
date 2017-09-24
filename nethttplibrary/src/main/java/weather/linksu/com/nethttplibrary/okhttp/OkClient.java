@@ -114,8 +114,12 @@ public class OkClient implements HttpClient {
                     String result = response.body().string();
                     Log.e("doRequest", "okClient request success ");
                     try {
-                        Object object = GsonUtill.getObejctFromJSON(result, type);
-                        callbackSuccess(action, object);
+                        if (null != type){
+                            Object object = GsonUtill.getObejctFromJSON(result, type);
+                            callbackSuccess(action, object);
+                        }else {
+                            callbackSuccess(action, result);
+                        }
                     } catch (Exception e) {
                         callbackFailure(action, "Json 解析异常", e);
                     }
