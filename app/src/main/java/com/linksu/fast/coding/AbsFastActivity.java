@@ -9,6 +9,9 @@ import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 
+import weather.linksu.com.nethttplibrary.HttpUtil;
+import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
+
 public class AbsFastActivity extends LBaseActivity {
 
     private TextView tv_test;
@@ -51,8 +54,33 @@ public class AbsFastActivity extends LBaseActivity {
     @Override
     protected void loadData() {
         // 测试 SDK 是否正常工作的代码
-        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
-        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+//        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
+//        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+
+        HttpUtil httpUtil = new HttpUtil();
+        httpUtil.with(this)
+                .action(2)
+                .get()
+                .url("/v2/movie/in_theaters")
+                .subclass(TestBean.class)
+                .setHttpClient(new RetrofitClient(this))
+                .execute(this);
+
+//        httpUtil.with(this)
+//                .action(1)
+//                .get()
+//                .url("/v2/movie/subject/1764796")
+//                .subclass(TestBean.class)
+//                .execute(this);
+//
+//
+//
+//        httpUtil.with(this)
+//                .action(3)
+//                .get()
+//                .url("/v2/movie/subject/1764796")
+//                .subclass(TestBean.class)
+//                .execute(this);
     }
 
     @Override
@@ -78,10 +106,13 @@ public class AbsFastActivity extends LBaseActivity {
         showContentView();
         switch (action) {
             case 1:
-                tv_test.setText("/v2/movie/subject/1764796");
+                tv_test.setText("okhttp 请求网络1");
                 break;
             case 2:
-                tv_test.setText("/v2/movie/in_theaters");
+                tv_test.setText("retrofit 请求网络1");
+                break;
+            case 3:
+                tv_test.setText("okhttp 请求网络2");
                 break;
         }
     }

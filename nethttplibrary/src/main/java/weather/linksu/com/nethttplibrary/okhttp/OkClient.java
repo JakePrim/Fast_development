@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -75,28 +76,23 @@ public class OkClient implements HttpClient {
     }
 
     @Override
-    public void get(String url, int action) {
+    public void get(String url, int action, BaseCallback callBack) {
+        this.callBack = callBack;
         Request request = buildRequest(url, HttpMethodType.GET, null);
         doRequest(request, action);
     }
 
     @Override
-    public void post(String url, Map<String, String> param, int action) {
+    public void post(String url, Map<String, String> param, int action, BaseCallback callBack) {
+        this.callBack = callBack;
         Request request = buildRequest(url, HttpMethodType.POST, param);
         doRequest(request, action);
-    }
-
-    @Override
-    public void setCallBack(BaseCallback callBack) {
-        this.callBack = callBack;
     }
 
     @Override
     public void getSuperclassTypeParameter(Class subclass) {
         type = subclass;
     }
-
-    private Disposable disposable;
 
     /**
      * 开始去请求
@@ -116,7 +112,7 @@ public class OkClient implements HttpClient {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String result = response.body().string();
-                    Log.e("doRequest", "onResponse: " + result);
+                    Log.e("doRequest", "okClient request success ");
                     try {
                         Object object = GsonUtill.getObejctFromJSON(result, type);
                         callbackSuccess(action, object);

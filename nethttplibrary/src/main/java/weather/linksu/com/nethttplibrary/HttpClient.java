@@ -19,7 +19,7 @@ public interface HttpClient {
      * @param url
      * @param action
      */
-    void get(String url, int action);
+    void get(String url, int action, BaseCallback callBack);
 
     /**
      * post 请求
@@ -28,17 +28,11 @@ public interface HttpClient {
      * @param param
      * @param action
      */
-    void post(String url, Map<String, String> param, int action);
-
-    /**
-     * 请求回调
-     *
-     * @param callBack
-     */
-    void setCallBack(BaseCallback callBack);
+    void post(String url, Map<String, String> param, int action, BaseCallback callBack);
 
     /**
      * 解析json的类
+     *
      * @param subclass
      */
     void getSuperclassTypeParameter(Class subclass);
