@@ -15,7 +15,7 @@ import com.linksu.fast.coding.baselibrary.base.fragment.BaseFragment;
  * 修订历史：
  * ================================================
  */
-public abstract class LFragmentBaseActivity extends LBaseActivity {
+public abstract class LFragmentActivity extends LBaseActivity {
 
     // 布局中fragment的ID
     protected abstract int getFragmentContentId();

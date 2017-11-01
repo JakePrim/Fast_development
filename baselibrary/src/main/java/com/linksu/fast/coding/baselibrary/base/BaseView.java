@@ -1,4 +1,4 @@
-package com.linksu.fast.coding.baselibrary.base.baserxmvp;
+package com.linksu.fast.coding.baselibrary.base;
 
 /**
  * ==========================================
@@ -10,8 +10,6 @@ package com.linksu.fast.coding.baselibrary.base.baserxmvp;
  * ==========================================
  */
 
-public interface BasePresenter {
-    void subsrcibe();
-
-    void unsubsrcibe();
+public interface BaseView<T> {
+    void setPresenter(T presenter);
 }

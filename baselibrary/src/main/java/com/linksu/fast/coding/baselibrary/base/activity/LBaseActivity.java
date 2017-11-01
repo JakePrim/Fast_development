@@ -31,15 +31,10 @@ import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
  * 修订历史：v1.0.0 first coding
  * ================================================
  */
-public abstract class LBaseActivity extends BaseActivity implements BaseCallback {
-
-    public HttpUtil httpUtil;
+public abstract class LBaseActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        httpUtil = HttpUtil.getInstance();
-        httpUtil.setHttpClient(new RetrofitClient(this));
-        httpUtil.setCallBack(this);
         initArgs();
         operateArgs();//在加载布局之前的操作
         super.onCreate(savedInstanceState);

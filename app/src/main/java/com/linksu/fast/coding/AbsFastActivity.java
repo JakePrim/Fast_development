@@ -51,8 +51,8 @@ public class AbsFastActivity extends LBaseActivity {
     @Override
     protected void loadData() {
         // 测试 SDK 是否正常工作的代码
-        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
-        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+//        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
+//        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
     }
 
     @Override
@@ -62,29 +62,29 @@ public class AbsFastActivity extends LBaseActivity {
         }
     }
 
-    @Override
-    public void onLoadRequest(Object request) {
-        showLoadingView();
-    }
-
-    @Override
-    public void onFailure(int action, Object data, Exception e) {
-        showErrorView();
-        ToastUtils.showShortSafe(data.toString());
-    }
-
-    @Override
-    public void onResponse(int action, Object data) {
-        showContentView();
-        switch (action) {
-            case 1:
-                tv_test.setText("/v2/movie/subject/1764796");
-                break;
-            case 2:
-                tv_test.setText("/v2/movie/in_theaters");
-                break;
-        }
-    }
+//    @Override
+//    public void onLoadRequest(Object request) {
+//        showLoadingView();
+//    }
+//
+//    @Override
+//    public void onFailure(int action, Object data, Exception e) {
+//        showErrorView();
+//        ToastUtils.showShortSafe(data.toString());
+//    }
+//
+//    @Override
+//    public void onResponse(int action, Object data) {
+//        showContentView();
+//        switch (action) {
+//            case 1:
+//                tv_test.setText("/v2/movie/subject/1764796");
+//                break;
+//            case 2:
+//                tv_test.setText("/v2/movie/in_theaters");
+//                break;
+//        }
+//    }
 
     @Override
     protected void onRetryClick() {

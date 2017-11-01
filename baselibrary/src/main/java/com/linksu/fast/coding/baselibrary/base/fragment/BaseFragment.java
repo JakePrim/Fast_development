@@ -1,7 +1,6 @@
 package com.linksu.fast.coding.baselibrary.base.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.linksu.fast.coding.baselibrary.base.activity.LFragmentBaseActivity;
+import com.linksu.fast.coding.baselibrary.base.activity.LFragmentActivity;
 
 /**
  * ================================================
@@ -22,7 +21,7 @@ import com.linksu.fast.coding.baselibrary.base.activity.LFragmentBaseActivity;
  */
 public abstract class BaseFragment extends Fragment {
 
-    protected LFragmentBaseActivity mActivity;
+    protected LFragmentActivity mActivity;
     public View rootView = null;
     protected boolean isVisible;
 
@@ -34,8 +33,10 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(getLayoutId(), container, false);
-        initView(rootView, savedInstanceState);
+        if (rootView == null) {
+            rootView = inflater.inflate(getLayoutId(), container, false);
+            initView(rootView, savedInstanceState);
+        }
         return rootView;
     }
 
@@ -46,7 +47,7 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void loadData();
 
-    protected LFragmentBaseActivity getHostActivity() {
+    protected LFragmentActivity getHostActivity() {
         return mActivity;
     }
 
@@ -54,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.mActivity = (LFragmentBaseActivity) activity;
+        this.mActivity = (LFragmentActivity) activity;
     }
 
     protected void addFragment(BaseFragment fragment) {
