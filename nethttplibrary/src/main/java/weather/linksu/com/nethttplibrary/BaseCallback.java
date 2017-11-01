@@ -1,11 +1,5 @@
 package weather.linksu.com.nethttplibrary;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
-import okhttp3.Request;
-import okhttp3.Response;
-
 /**
  * ================================================
  * 作    者：linksus

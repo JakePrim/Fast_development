@@ -198,6 +198,21 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
         }
     }
 
+    @Override
+    public void onLoadRequest(Object request) {
+
+    }
+
+    @Override
+    public void onFailure(int action, Object data, Exception e) {
+
+    }
+
+    @Override
+    public void onResponse(int action, Object data) {
+
+    }
+
     /**
      * 弹出系统的dialog
      *

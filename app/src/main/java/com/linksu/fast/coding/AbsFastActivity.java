@@ -91,29 +91,6 @@ public class AbsFastActivity extends LBaseActivity {
         }
     }
 
-//    @Override
-//    public void onLoadRequest(Object request) {
-//        showLoadingView();
-//    }
-//
-//    @Override
-//    public void onFailure(int action, Object data, Exception e) {
-//        showErrorView();
-//        ToastUtils.showShortSafe(data.toString());
-//    }
-//
-//    @Override
-//    public void onResponse(int action, Object data) {
-//        showContentView();
-//        switch (action) {
-//            case 1:
-//                tv_test.setText("/v2/movie/subject/1764796");
-//                break;
-//            case 2:
-//                tv_test.setText("/v2/movie/in_theaters");
-//                break;
-//        }
-//    }
     @Override
     public void onLoadRequest(Object request) {
         showLoadingView();
@@ -137,6 +114,8 @@ public class AbsFastActivity extends LBaseActivity {
                 break;
             case 3:
                 tv_test.setText("okhttp 请求网络2");
+                break;
+            default:
                 break;
         }
     }

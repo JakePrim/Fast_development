@@ -36,7 +36,7 @@ public class HttpUtil {
      *
      * @param httpClient
      */
-    public static void initHttpClient(HttpClient httpClient) {
+    public static void initHttpClient(HttpClient httpClient)  {
         mhttpClient = httpClient;
     }
 
