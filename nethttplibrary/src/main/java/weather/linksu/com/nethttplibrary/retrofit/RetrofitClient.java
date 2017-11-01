@@ -2,6 +2,7 @@ package weather.linksu.com.nethttplibrary.retrofit;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import weather.linksu.com.nethttplibrary.HttpClient;
  * ================================================
  */
 public class RetrofitClient implements HttpClient {
+    private static String TAG = "RetrofitClient";
     private static final int DEFAULT_TIMEOUT = 10;
     private ApiService apiService;
     private static OkHttpClient okHttpClient;
@@ -107,7 +109,8 @@ public class RetrofitClient implements HttpClient {
     }
 
     @Override
-    public void get(String url, final int action) {
+    public void get(String url, final int action, BaseCallback callBack) {
+        this.callback = callBack;
         apiService.executeGet(url)
                 .compose(RxSchedulers.<ResponseBody>compose())
                 .subscribe(new BaseObserver<ResponseBody>() {
@@ -124,9 +127,14 @@ public class RetrofitClient implements HttpClient {
                     @Override
                     public void onQuestResult(@NonNull ResponseBody responseBody) {
                         try {
+                            Log.e(TAG, "onQuestResult: retrofit request success");
                             String result = responseBody.string();
-                            Object object = GsonUtill.getObejctFromJSON(result, subclass);
-                            callback.onResponse(action, object);
+                            if (null != subclass) {
+                                Object object = GsonUtill.getObejctFromJSON(result, subclass);
+                                callback.onResponse(action, object);
+                            } else {
+                                callback.onResponse(action, result);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -140,7 +148,8 @@ public class RetrofitClient implements HttpClient {
     }
 
     @Override
-    public void post(String url, Map<String, String> param, final int action) {
+    public void post(String url, Map<String, String> param, final int action, BaseCallback callBack) {
+        this.callback = callBack;
         apiService.executePost(url, param)
                 .compose(RxSchedulers.<ResponseBody>compose())
                 .subscribe(new BaseObserver<ResponseBody>() {
@@ -156,7 +165,18 @@ public class RetrofitClient implements HttpClient {
 
                     @Override
                     public void onQuestResult(@NonNull ResponseBody responseBody) {
-                        callback.onResponse(action, responseBody);
+                        String result = null;
+                        try {
+                            result = responseBody.string();
+                            if (null != subclass) {
+                                Object object = GsonUtill.getObejctFromJSON(result, subclass);
+                                callback.onResponse(action, object);
+                            } else {
+                                callback.onResponse(action, result);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -164,11 +184,6 @@ public class RetrofitClient implements HttpClient {
                         callback.onLoadRequest("");
                     }
                 });
-    }
-
-    @Override
-    public void setCallBack(BaseCallback callBack) {
-        this.callback = callBack;
     }
 
     @Override

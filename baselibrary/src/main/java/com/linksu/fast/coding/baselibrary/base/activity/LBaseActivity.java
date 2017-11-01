@@ -31,7 +31,8 @@ import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
  * 修订历史：v1.0.0 first coding
  * ================================================
  */
-public abstract class LBaseActivity extends BaseActivity {
+
+public abstract class LBaseActivity extends BaseActivity implements BaseCallback {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
