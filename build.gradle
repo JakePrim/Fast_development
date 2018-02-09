@@ -9,6 +9,10 @@ buildscript {
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
         }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
@@ -24,6 +28,10 @@ allprojects {
         //这里是 LeanCloud 的包仓库
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
         }
     }
 }
@@ -41,6 +49,21 @@ def retrofitVersion = '2.3.0'
 def rxjavaVersion = '2.1.3'
 def rxandroidVersion = '2.0.1'
 
+ext {
+    sdkVersion = [
+            COMPILE_SDK_VERSION              : 25,
+            BUILDTOOLS_VERSION               : "25.0.3",
+            MIN_SDK_VERSION                  : 15,
+            TARGET_SDK_VERSION               : 23
+    ]
+
+    projextVersion = [
+            VERSION_CODE                     : 1,
+            VERSION_NAME                     : "1.0"
+    ]
+
+}
+
 project.ext {
     dependencies = [
             //android-support
@@ -56,11 +79,6 @@ project.ext {
             //okHttp3
             "okhttp3"                    : "com.squareup.okhttp3:okhttp:${okhttpVersion}",
             "okhttp3-logging-interceptor": "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}",
-
-            //retrofit
-            "retrofit"                   : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            "adapter-rxjava"             : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            "converter-gson"             : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
 
             //RxJava
             "rxandroid"                  : "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}",

@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
+    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
     defaultConfig {
-        applicationId "com.linksu.fast.coding"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion sdkVersion.MIN_SDK_VERSION
+        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        versionCode projextVersion.VERSION_CODE
+        versionName projextVersion.VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -16,22 +15,26 @@ android {
             }
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
         }
     }
+
     //为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
     lintOptions {
         abortOnError false
     }
@@ -39,15 +42,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    testCompile 'junit:junit:4.12'
     // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v4.4.4')
+//    compile('cn.leancloud.android:avoscloud-sdk:v4.4.4')
     // 推送与实时聊天需要的包
 //    compile ('cn.leancloud.android:avoscloud-push:v4.4.4@aar'){transitive = true}
 //
@@ -65,5 +61,9 @@ dependencies {
 //
 //    // LeanCloud 应用内搜索包
 //    compile ('cn.leancloud.android:avoscloud-search:v4.4.4@aar')
-    compile project(":baselibrary")
+    if (!isBuildModule.toBoolean()) {
+        compile project(':module_common')
+    } else {
+        compile project(':lib_base')
+    }
 }

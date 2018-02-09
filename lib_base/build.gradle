@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
+    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion sdkVersion.MIN_SDK_VERSION
+        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        versionCode projextVersion.VERSION_CODE
+        versionName projextVersion.VERSION_NAME
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    compile rootProject.ext.dependencies["design"]
+    compile rootProject.ext.dependencies["recyclerview-v7"]
+    compile rootProject.ext.dependencies["cardview-v7"]
+    compile rootProject.ext.dependencies["glide"]
+    compile rootProject.ext.dependencies["eventbus"]
+    compile rootProject.ext.dependencies["constraint-layout"]
+    compile rootProject.ext.dependencies["palette-v7"]
+    compile rootProject.ext.dependencies["support-annotations"]
+    compile project(":lib_net")
+    testCompile 'junit:junit:4.12'
+}

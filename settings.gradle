@@ -1,1 +1,1 @@
-include ':app', ':baselibrary', ':nethttplibrary'
+include ':app', ':lib_base', ':lib_net', ':module_common'

@@ -4,19 +4,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
 import com.linksu.fast.coding.bean.TestBean;
-
 import weather.linksu.com.nethttplibrary.HttpUtil;
-import weather.linksu.com.nethttplibrary.retrofit.RetrofitClient;
 
 public class AbsFastActivity extends LBaseActivity {
 
     private TextView tv_test;
-
 
     @Override
     protected void operateArgs() {
@@ -64,7 +60,6 @@ public class AbsFastActivity extends LBaseActivity {
                 .get()
                 .url("/v2/movie/in_theaters")
                 .subclass(TestBean.class)
-                .setHttpClient(new RetrofitClient(this))
                 .execute(this);
 
 //        httpUtil.with(this)

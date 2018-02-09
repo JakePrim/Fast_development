@@ -4,8 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Fast_development.iml" filepath="$PROJECT_DIR$/Fast_development.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/baselibrary/baselibrary.iml" filepath="$PROJECT_DIR$/baselibrary/baselibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nethttplibrary/nethttplibrary.iml" filepath="$PROJECT_DIR$/nethttplibrary/nethttplibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib_base/baselibrary.iml" filepath="$PROJECT_DIR$/lib_base/baselibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib_net/lib_net.iml" filepath="$PROJECT_DIR$/lib_net/lib_net.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module_common/module_common.iml" filepath="$PROJECT_DIR$/module_common/module_common.iml" />
     </modules>
   </component>
 </project>
