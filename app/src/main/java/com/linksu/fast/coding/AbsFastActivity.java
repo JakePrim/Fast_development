@@ -61,12 +61,6 @@ public class AbsFastActivity extends LBaseActivity implements HttpCallback {
 //        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
 //        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
         PrimHttpUtils.getInstance()
-                .<String>get("https://api.douban.com/v2/movie/in_theaters")
-                .id(1)
-                .tag(TAG)
-                .enqueue(this);
-
-        PrimHttpUtils.getInstance()
                 .get("https://api.douban.com/v2/movie/subject/1764796")
                 .id(2)
                 .tag(TAG)
@@ -74,7 +68,18 @@ public class AbsFastActivity extends LBaseActivity implements HttpCallback {
                     @Override
                     public void onFinish(int id) {
                         super.onFinish(id);
-                        PrimLogger.e(TAG, "整个网络请求完毕 --> " + id);
+                        PrimLogger.e(TAG, "get 整个网络请求完毕 --> " + id);
+                        PrimHttpUtils.getInstance()
+                                .<String>post("https://api.douban.com/v2/movie/in_theaters")
+                                .id(1)
+                                .tag(TAG)
+                                .enqueue(new DialogCallback<String>(AbsFastActivity.this) {
+                                    @Override
+                                    public void onFinish(int id) {
+                                        super.onFinish(id);
+                                        PrimLogger.e(TAG, "post 整个网络请求完毕 --> " + id);
+                                    }
+                                });
                     }
 
                     @Override

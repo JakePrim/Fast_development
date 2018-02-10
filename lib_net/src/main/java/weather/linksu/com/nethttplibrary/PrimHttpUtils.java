@@ -8,18 +8,16 @@ import android.os.Looper;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import weather.linksu.com.nethttplibrary.callback.HttpCallback;
-import weather.linksu.com.nethttplibrary.httpclient.HttpClient;
-import weather.linksu.com.nethttplibrary.httpclient.OkClient;
+import weather.linksu.com.nethttplibrary.client.HttpClient;
+import weather.linksu.com.nethttplibrary.client.OkClient;
 import weather.linksu.com.nethttplibrary.model.HttpHeaders;
 import weather.linksu.com.nethttplibrary.model.HttpParams;
 import weather.linksu.com.nethttplibrary.request.GetRequest;
-import weather.linksu.com.nethttplibrary.utils.HttpMethodType;
+import weather.linksu.com.nethttplibrary.request.PostRequest;
 import weather.linksu.com.nethttplibrary.utils.Utils;
 
 /**
@@ -37,12 +35,7 @@ public class PrimHttpUtils {
     private HttpClient httpClient;                      //网络请求客户 默认为Okhttp
     private static String TAG = "PrimHttpUtils";
     private WeakReference<Activity> weakActivity;       //用于获取在哪个Activity执行网络请求
-    private String url;
-    private Map<String, String> param;
     private boolean isCache;
-    private HttpMethodType methodType;
-    private Class subclass;
-    private int action;
     private Handler mHandler;                                   //用于在主线程执行的调度器
     private WeakReference<Application> context;                 //全局上下文 WeakReference 弱引用
     private HttpParams mCommonParams;                           //全局公共请求参数
@@ -73,25 +66,13 @@ public class PrimHttpUtils {
         return context.get();
     }
 
-    /**
-     * 初始化context
-     *
-     * @param context
-     *
-     * @return
-     */
+    /** 初始化context */
     public PrimHttpUtils with(Activity context) {
         this.weakActivity = new WeakReference<>(context);
         return this;
     }
 
-    /**
-     * 是否缓存
-     *
-     * @param isCache
-     *
-     * @return
-     */
+    /** 是否缓存 */
     public PrimHttpUtils cache(boolean isCache) {
         this.isCache = isCache;
         return this;
@@ -106,9 +87,11 @@ public class PrimHttpUtils {
     }
 
     /** post 方式请求 */
-    public PrimHttpUtils post() {
-        this.methodType = HttpMethodType.POST;
-        return this;
+    public <T> PostRequest<T> post(String url) {
+        if (checkHttpClient(httpClient)) {
+            return httpClient.post(url);
+        }
+        return null;
     }
 
     /** 在此方法中设置网络请求客户端 */

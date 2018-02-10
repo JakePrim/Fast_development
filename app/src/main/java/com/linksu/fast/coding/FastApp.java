@@ -4,9 +4,6 @@ import android.content.Context;
 
 import com.linksu.fast.coding.baselibrary.base.BaseApplication;
 
-import weather.linksu.com.nethttplibrary.PrimHttpUtils;
-import weather.linksu.com.nethttplibrary.httpclient.OkClient;
-
 /**
  * ================================================
  * 作    者：linksus
