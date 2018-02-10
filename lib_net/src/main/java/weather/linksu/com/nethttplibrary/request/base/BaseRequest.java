@@ -1,0 +1,228 @@
+package weather.linksu.com.nethttplibrary.request.base;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import weather.linksu.com.nethttplibrary.PrimHttpUtils;
+import weather.linksu.com.nethttplibrary.callback.HttpCallback;
+import weather.linksu.com.nethttplibrary.converter.Converter;
+import weather.linksu.com.nethttplibrary.model.HttpHeaders;
+import weather.linksu.com.nethttplibrary.model.HttpParams;
+import weather.linksu.com.nethttplibrary.utils.HttpMethodType;
+import weather.linksu.com.nethttplibrary.utils.Utils;
+
+/**
+ * ================================================
+ * 作    者：linksus
+ * 版    本：1.0
+ * 创建日期：2/9 0009
+ * 描    述：所有请求的基类，其中泛型 R 主要用于属性设置方法后，返回对应的子类型，以便于实现链式调用
+ * 参考 okgo
+ * 修订历史：
+ * ================================================
+ */
+public abstract class BaseRequest<T, R extends BaseRequest> implements Serializable {
+
+    protected String url;
+    protected Object tag;
+    protected int id;
+    protected HttpParams params;
+    protected HttpHeaders headers;
+    protected transient okhttp3.Request mRequest;
+    protected transient HttpCallback<T> callback;
+    protected transient Converter<T> converter;
+
+    public BaseRequest(String url) {
+        this.url = url;
+        PrimHttpUtils prim = PrimHttpUtils.getInstance();
+        if (prim.getHttpParams() != null) {
+            params = prim.getHttpParams();
+        } else {
+            params = new HttpParams();
+        }
+        if (prim.getHeaderParams() != null) {
+            headers = prim.getHeaderParams();
+        } else {
+            headers = new HttpHeaders();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public R tag(Object tag) {
+        this.tag = tag;
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R url(String url) {
+        this.url = url;
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R id(int id) {
+        this.id = id;
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R converter(Converter<T> converter) {
+        Utils.checkNotNull(converter, "converter == null");
+        this.converter = converter;
+        return (R) this;
+    }
+
+    public Converter<T> getConverter() {
+        // converter 优先级高于 callback
+        if (converter == null) converter = callback;
+        Utils.checkNotNull(converter, "converter == null, do you forget to call Request#converter(Converter<T>) ?");
+        return converter;
+    }
+
+    public abstract HttpMethodType getMethod();
+
+    /** 获取参数 */
+    public HttpParams getParams() {
+        return params;
+    }
+
+    /** 添加参数 */
+    @SuppressWarnings("unchecked")
+    public R params(HttpParams params) {
+        Utils.checkNotNull(params, "params == null");
+        this.params.put(params);
+        return (R) this;
+    }
+
+    /** 添加参数 */
+    @SuppressWarnings("unchecked")
+    public R params(String key, String value) {
+        params.put(key, value);
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R removeParams(String key) {
+        params.remove(key);
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R removeAllParams() {
+        params.clear();
+        return (R) this;
+    }
+
+    /** 获取全局的请求头 */
+    public HttpHeaders getHeader() {
+        return headers;
+    }
+
+    /** 添加全局的请求头 */
+    public R headers(HttpHeaders headers) {
+        this.headers.put(headers);
+        return (R) this;
+    }
+
+    /** 添加全局公共参数 */
+    public R headers(String key, String value) {
+        headers.put(key, value);
+        return (R) this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Object getTag() {
+        return tag;
+    }
+
+    public Request getRequest() {
+        return mRequest;
+    }
+
+    public void setCallback(HttpCallback<T> callback) {
+        this.callback = callback;
+    }
+
+    /** 根据不同的请求方式和参数，生成不同的RequestBody */
+    protected abstract RequestBody generateRequestBody();
+
+    /** 根据不同的请求方式，将RequestBody转换成Request对象 */
+    public abstract okhttp3.Request generateRequest(RequestBody requestBody);
+
+
+    /** 获取okhttp的同步call对象 */
+    public okhttp3.Call getRawCall() {
+        //构建请求体，返回call对象
+        RequestBody requestBody = generateRequestBody();
+        if (requestBody != null) {
+            ProgressRequestBody<T> progressRequestBody = new ProgressRequestBody<>(requestBody, callback);
+//            progressRequestBody.setInterceptor(uploadInterceptor);
+            mRequest = generateRequest(progressRequestBody);
+        } else {
+            mRequest = generateRequest(null);
+        }
+        return PrimHttpUtils.getInstance().startRequest(mRequest);
+    }
+
+    /** 同步调用，阻塞方法，同步请求执行 */
+    public Response execute() throws IOException {
+        return getRawCall().execute();
+    }
+
+    /** 异步调用,非阻塞方法,但是回调在子线程中执行 */
+    public void enqueue(final HttpCallback<T> callback) {
+        Utils.checkNotNull(callback, "callback == null");
+        this.callback = callback;
+        callback.onStart(this, id);
+        getRawCall().enqueue(new Callback() {
+            @Override
+            public void onFailure(final Call call, final IOException e) {
+                failure(call, e, callback);
+            }
+
+            @Override
+            public void onResponse(final Call call, final Response response) throws IOException {
+                response(call, response, callback);
+            }
+        });
+    }
+
+    /** 将请求到的错误信息 post 到主线程中去 用于界面UI的反馈 */
+    private void failure(final Call call, final IOException e, final HttpCallback<T> callback) {
+        Utils.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onError(call, e, id);
+                callback.onFinish(id);
+            }
+        });
+    }
+
+    /** 将请求到的结果 post 到主线程中去 */
+    private void response(final Call call, final Response response, final HttpCallback<T> callback) {
+        final T t;
+        try {
+            t = callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
+            Utils.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onSuccess(t, id);
+                    callback.onFinish(id);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            callback.onError(call, null, id);
+            callback.onFinish(id);
+        }
+    }
+
+}
