@@ -18,11 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import okhttp3.Call;
-import okhttp3.Response;
-import weather.linksu.com.nethttplibrary.callback.HttpCallback;
-import weather.linksu.com.nethttplibrary.request.base.BaseRequest;
-
 /**
  * ================================================
  * 作    者：linksus

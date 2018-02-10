@@ -6,7 +6,7 @@ import android.content.Context;
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
 import com.linksu.fast.coding.baselibrary.utils.Utils;
 
-import weather.linksu.com.nethttplibrary.PrimHttpUtils;
+import lib.prim.com.net.PrimHttpUtils;
 
 /**
  * ================================================
