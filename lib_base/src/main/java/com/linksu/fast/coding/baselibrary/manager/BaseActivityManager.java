@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 
-import com.linksu.fast.coding.baselibrary.utils.LogUtils;
+import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class BaseActivityManager {
             activityMgr.killBackgroundProcesses(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
-            LogUtils.e("appexit Exception:", e.getMessage());
+            PrimLogger.e("appexit Exception:", e.getMessage());
         }
     }
 

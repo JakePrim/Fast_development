@@ -18,7 +18,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import weather.linksu.com.nethttplibrary.BaseCallback;
+import okhttp3.Call;
+import okhttp3.Response;
+import weather.linksu.com.nethttplibrary.callback.HttpCallback;
+import weather.linksu.com.nethttplibrary.request.base.BaseRequest;
 
 /**
  * ================================================
@@ -30,7 +33,7 @@ import weather.linksu.com.nethttplibrary.BaseCallback;
  * ================================================
  */
 
-public abstract class LBaseActivity extends BaseActivity implements BaseCallback {
+public abstract class LBaseActivity extends BaseActivity  {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +79,8 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
     /**
      * Bundle  传递数据
      *
-     * @param extras 得到Activity传递过来的数据
+     * @param extras
+     *         得到Activity传递过来的数据
      */
     protected abstract void getBundleExtras(Bundle extras);
 
@@ -115,6 +119,7 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
      *
      * @param viewId
      * @param <T>
+     *
      * @return
      */
     protected <T extends View> T findAviewById(int viewId) {
@@ -176,9 +181,12 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
     /**
      * 控制Activity的跳转方法
      *
-     * @param startIntent intent
-     * @param bundle      bundle数据
-     * @param requestCode 请求码
+     * @param startIntent
+     *         intent
+     * @param bundle
+     *         bundle数据
+     * @param requestCode
+     *         请求码
      */
     private void startToActivity(Intent startIntent, Bundle bundle, int requestCode, boolean isFinish) {
         if (startIntent != null) {
@@ -196,21 +204,6 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
         }
     }
 
-    @Override
-    public void onLoadRequest(Object request) {
-
-    }
-
-    @Override
-    public void onFailure(int action, Object data, Exception e) {
-
-    }
-
-    @Override
-    public void onResponse(int action, Object data) {
-
-    }
-
     /**
      * 弹出系统的dialog
      *
@@ -219,6 +212,7 @@ public abstract class LBaseActivity extends BaseActivity implements BaseCallback
      * @param positive
      * @param negative
      * @param listener
+     *
      * @return
      */
     protected void popupSysDialog(String title, String message, String positive, String negative, final SystemDialog.onSysDialogListener listener) {

@@ -3,26 +3,15 @@ package com.linksu.fast.coding.baselibrary.base.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.linksu.fast.coding.baselibrary.R;
-import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
-import com.linksu.fast.coding.baselibrary.manager.BaseActivityManager;
-import com.linksu.fast.coding.baselibrary.utils.LogUtils;
 import com.linksu.fast.coding.baselibrary.widget.MultipleStatusView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * ================================================
@@ -36,7 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    protected String TAG = "";
+    protected String TAG = this.getClass().getSimpleName();
     protected Context mContext;
     protected View mBaseLayout;
     public RelativeLayout content_view;

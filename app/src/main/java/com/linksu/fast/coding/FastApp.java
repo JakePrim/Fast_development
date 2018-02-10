@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.linksu.fast.coding.baselibrary.base.BaseApplication;
 
-import weather.linksu.com.nethttplibrary.HttpUtil;
-import weather.linksu.com.nethttplibrary.okhttp.OkClient;
+import weather.linksu.com.nethttplibrary.PrimHttpUtils;
+import weather.linksu.com.nethttplibrary.httpclient.OkClient;
 
 /**
  * ================================================
@@ -24,7 +24,7 @@ public class FastApp extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        HttpUtil.initHttpClient(new OkClient());
+//        PrimHttpUtils.init(new OkClient());
         // 初始化参数依次为 this, AppId, AppKey
 //        AVOSCloud.initialize(this, "44lwlOKiTbmYvGToxIggkHj3-gzGzoHsz", "Rk911hC66tLEadVHF2G42p8y");
 //        AVOSCloud.setDebugLogEnabled(true);//开启调试日志

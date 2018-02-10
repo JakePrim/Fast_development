@@ -4,13 +4,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
-import com.linksu.fast.coding.baselibrary.utils.ToastUtils;
-import com.linksu.fast.coding.bean.TestBean;
-import weather.linksu.com.nethttplibrary.HttpUtil;
+import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
 
-public class AbsFastActivity extends LBaseActivity {
+import okhttp3.Call;
+import okhttp3.Response;
+import weather.linksu.com.nethttplibrary.PrimHttpUtils;
+import weather.linksu.com.nethttplibrary.callback.DialogCallback;
+import weather.linksu.com.nethttplibrary.callback.HttpCallback;
+import weather.linksu.com.nethttplibrary.request.base.BaseRequest;
+
+public class AbsFastActivity extends LBaseActivity implements HttpCallback {
 
     private TextView tv_test;
 
@@ -51,32 +57,36 @@ public class AbsFastActivity extends LBaseActivity {
     @Override
     protected void loadData() {
         // 测试 SDK 是否正常工作的代码
+        //https://api.douban.com/v2/book/1220562
 //        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
 //        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+        PrimHttpUtils.getInstance()
+                .<String>get("https://api.douban.com/v2/movie/in_theaters")
+                .id(1)
+                .tag(TAG)
+                .enqueue(this);
 
-        HttpUtil httpUtil = new HttpUtil();
-        httpUtil.with(this)
-                .action(2)
-                .get()
-                .url("/v2/movie/in_theaters")
-                .subclass(TestBean.class)
-                .execute(this);
+        PrimHttpUtils.getInstance()
+                .get("https://api.douban.com/v2/movie/subject/1764796")
+                .id(2)
+                .tag(TAG)
+                .enqueue(new DialogCallback<Object>(this) {
+                    @Override
+                    public void onFinish(int id) {
+                        super.onFinish(id);
+                        PrimLogger.e(TAG, "整个网络请求完毕 --> " + id);
+                    }
 
-//        httpUtil.with(this)
-//                .action(1)
-//                .get()
-//                .url("/v2/movie/subject/1764796")
-//                .subclass(TestBean.class)
-//                .execute(this);
-//
-//
-//
-//        httpUtil.with(this)
-//                .action(3)
-//                .get()
-//                .url("/v2/movie/subject/1764796")
-//                .subclass(TestBean.class)
-//                .execute(this);
+                    @Override
+                    public void onSuccess(Object response, int id) {
+                        super.onSuccess(response, id);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        super.onError(call, e, id);
+                    }
+                });
     }
 
     @Override
@@ -87,36 +97,35 @@ public class AbsFastActivity extends LBaseActivity {
     }
 
     @Override
-    public void onLoadRequest(Object request) {
-        showLoadingView();
-    }
-
-    @Override
-    public void onFailure(int action, Object data, Exception e) {
-        showErrorView();
-        ToastUtils.showShortSafe(data.toString());
-    }
-
-    @Override
-    public void onResponse(int action, Object data) {
-        showContentView();
-        switch (action) {
-            case 1:
-                tv_test.setText("okhttp 请求网络1");
-                break;
-            case 2:
-                tv_test.setText("retrofit 请求网络1");
-                break;
-            case 3:
-                tv_test.setText("okhttp 请求网络2");
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
     protected void onRetryClick() {
         loadData();
+    }
+
+    @Override
+    public void onStart(BaseRequest request, int id) {
+        showLoadingView();
+        PrimLogger.e(TAG, "开始加载网络请求 --> " + id);
+    }
+
+    @Override
+    public Object convertResponse(Response response, int id) {
+        return null;
+    }
+
+    @Override
+    public void onSuccess(Object response, int id) {
+        PrimLogger.e(TAG, "得到转换成功的数据 --> " + response);
+    }
+
+    @Override
+    public void onError(Call call, Exception e, int id) {
+        showErrorView();
+        PrimLogger.e(TAG, "请求网络失败或者解析失败 --> " + id);
+    }
+
+    @Override
+    public void onFinish(int id) {
+        showContentView();
+        PrimLogger.e(TAG, "整个网络请求完毕 --> " + id);
     }
 }
