@@ -8,10 +8,13 @@ import android.widget.TextView;
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
+import com.linksu.fast.coding.bean.ServerModel;
 
+import lib.prim.com.net.model.LzyResponse;
 import okhttp3.Call;
 import lib.prim.com.net.PrimHttpUtils;
 import lib.prim.com.net.callback.DialogCallback;
+import okhttp3.Response;
 
 public class AbsFastActivity extends LBaseActivity {
 
@@ -58,36 +61,15 @@ public class AbsFastActivity extends LBaseActivity {
 //        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
 //        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
         PrimHttpUtils.getInstance()
-                .get("https://api.douban.com/v2/movie/subject/1764796")
-                .id(2)
+                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(1)
                 .tag(TAG)
-                .enqueue(new DialogCallback<Object>(this) {
+                .params("id", "0")
+                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
                     @Override
-                    public void onFinish(int id) {
-                        super.onFinish(id);
-                        PrimLogger.e(TAG, "get 整个网络请求完毕 --> " + id);
-                        PrimHttpUtils.getInstance()
-                                .<String>post("https://api.douban.com/v2/movie/in_theaters")
-                                .id(1)
-                                .tag(TAG)
-                                .params("id", "0")
-                                .enqueue(new DialogCallback<String>(AbsFastActivity.this) {
-                                    @Override
-                                    public void onFinish(int id) {
-                                        super.onFinish(id);
-                                        PrimLogger.e(TAG, "post 整个网络请求完毕 --> " + id);
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onSuccess(Object response, int id) {
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
                         super.onSuccess(response, id);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        super.onError(call, e, id);
+                        PrimLogger.e(TAG, response.toString());
                     }
                 });
     }

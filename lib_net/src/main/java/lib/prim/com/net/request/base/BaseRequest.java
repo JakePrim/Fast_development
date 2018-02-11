@@ -40,13 +40,13 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     public BaseRequest(String url) {
         this.url = url;
         PrimHttpUtils prim = PrimHttpUtils.getInstance();
-        if (prim.getHttpParams() != null) {
-            params = prim.getHttpParams();
+        if (prim.getCommonParams() != null) {
+            params = prim.getCommonParams();
         } else {
             params = new HttpParams();
         }
-        if (prim.getHeaderParams() != null) {
-            headers = prim.getHeaderParams();
+        if (prim.getCommonHeaders() != null) {
+            headers = prim.getCommonHeaders();
         } else {
             headers = new HttpHeaders();
         }
@@ -84,6 +84,7 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         return converter;
     }
 
+    /** 请求方式 */
     public abstract HttpMethodType getMethod();
 
     /** 获取参数 */
@@ -106,12 +107,14 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         return (R) this;
     }
 
+    /** 删除某个参数 */
     @SuppressWarnings("unchecked")
     public R removeParams(String key) {
         params.remove(key);
         return (R) this;
     }
 
+    /** 删除所有参数 */
     @SuppressWarnings("unchecked")
     public R removeAllParams() {
         params.clear();

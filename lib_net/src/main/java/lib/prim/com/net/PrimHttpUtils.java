@@ -9,7 +9,9 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
+import lib.prim.com.net.https.HttpsUtils;
 import okhttp3.Call;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import lib.prim.com.net.client.HttpClient;
@@ -103,7 +105,7 @@ public class PrimHttpUtils {
     /** 开始请求 */
     public Call startRequest(Request request) {
         if (checkHttpClient(httpClient)) {
-            return httpClient.startRequest(request);
+            return (Call) httpClient.startRequest(request);
         }
         return null;
     }
@@ -125,43 +127,92 @@ public class PrimHttpUtils {
         return null;
     }
 
+    /** 链接超时 */
+    public PrimHttpUtils connectTimeout(long time) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.connectTimeout(time);
+        }
+        return this;
+    }
+
+    /** 读取超时 */
+    public PrimHttpUtils readTimeout(long time) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.readTimeout(time);
+        }
+        return this;
+    }
+
+    /** 写入超时 */
+    public PrimHttpUtils writeTimeout(long time) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.writeTimeout(time);
+        }
+        return this;
+    }
+
+    /** 设置拦截 */
+    public PrimHttpUtils addInterceptor(Interceptor interceptor) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.addInterceptor(interceptor);
+        }
+        return this;
+    }
+
+    /** 设置证书 */
+    public PrimHttpUtils setSSLParams(HttpsUtils.SSLParams sslParams) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        }
+        return this;
+    }
+
+    /** 设置okhttpClient */
+    public PrimHttpUtils setOkhttpClient(OkHttpClient.Builder builder) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.setBuilder(builder);
+        }
+        return this;
+    }
+
+    /** 获取handler */
     public Handler getHandler() {
         return mHandler;
     }
 
     /** 获取全局的公共参数 */
-    public HttpParams getHttpParams() {
+    public HttpParams getCommonParams() {
         return mCommonParams;
     }
 
     /** 添加全局公共参数 */
-    public PrimHttpUtils addHttpParams(HttpParams params) {
+    public PrimHttpUtils addCommonParams(HttpParams params) {
         if (mCommonParams == null) mCommonParams = new HttpParams();
         mCommonParams.put(params);
         return this;
     }
 
     /** 添加全局公共参数 */
-    public PrimHttpUtils addHttpParams(String key, String value) {
+    public PrimHttpUtils addCommonParams(String key, String value) {
         if (mCommonParams == null) mCommonParams = new HttpParams(key, value);
         mCommonParams.put(key, value);
         return this;
     }
 
     /** 获取全局的请求头 */
-    public HttpHeaders getHeaderParams() {
+    public HttpHeaders getCommonHeaders() {
         return mCommonHeaders;
     }
 
     /** 添加全局的请求头 */
-    public PrimHttpUtils addHeaderParams(HttpHeaders params) {
+    public PrimHttpUtils addCommonHeaders(HttpHeaders params) {
         if (mCommonHeaders == null) mCommonHeaders = new HttpHeaders();
         mCommonHeaders.put(params);
         return this;
     }
 
     /** 添加全局的请求头 */
-    public PrimHttpUtils addHeaderParams(String key, String value) {
+    public PrimHttpUtils addCommonHeaders(String key, String value) {
         if (mCommonHeaders == null) mCommonHeaders = new HttpHeaders(key, value);
         mCommonHeaders.put(key, value);
         return this;

@@ -21,7 +21,9 @@ public class FastApp extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-//        PrimHttpUtils.init(new OkClient());
+        //App Key：2301361998
+        //App Secret：97f393ca7abd6309a4ff336ea32ada60
+
         // 初始化参数依次为 this, AppId, AppKey
 //        AVOSCloud.initialize(this, "44lwlOKiTbmYvGToxIggkHj3-gzGzoHsz", "Rk911hC66tLEadVHF2G42p8y");
 //        AVOSCloud.setDebugLogEnabled(true);//开启调试日志

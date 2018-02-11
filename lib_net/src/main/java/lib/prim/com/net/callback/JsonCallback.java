@@ -1,6 +1,8 @@
 package lib.prim.com.net.callback;
 
 
+import android.util.Log;
+
 import com.google.gson.stream.JsonReader;
 
 import org.json.JSONArray;
@@ -52,7 +54,7 @@ public class JsonCallback<T> extends HttpCallbackAdapter<T> {
 
     /**
      * 该方法是子线程处理，不能做ui相关的工作
-     * 主要作用是解析网络返回的 response 对象,生产onSuccess回调中需要的数据对象 /**
+     * 主要作用是解析网络返回的 response 对象,生产onSuccess回调中需要的数据对象
      * 该方法是子线程处理，不能做ui相关的工作
      * 主要作用是解析网络返回的 response 对象,生产onSuccess回调中需要的数据对象
      */
@@ -74,7 +76,6 @@ public class JsonCallback<T> extends HttpCallbackAdapter<T> {
         } else {
             return parseType(response, type);
         }
-//     return super.convertResponse(response, id);
     }
 
     private T parseClass(Response response, Class<?> rawType) throws Exception {
@@ -138,13 +139,7 @@ public class JsonCallback<T> extends HttpCallbackAdapter<T> {
                 if (code == 0) {
                     //noinspection unchecked
                     return (T) lzyResponse;
-                }
-//                else if (code == 104) {
-//                    throw new IllegalStateException("用户授权信息无效");
-//                } else if (code == 105) {
-//                    throw new IllegalStateException("用户收取信息已过期");
-//                }
-                else {
+                } else {
                     //直接将服务端的错误信息抛出，onError中可以获取
                     throw new IllegalStateException("错误代码：" + code + "，错误信息：" + lzyResponse.msg);
                 }
