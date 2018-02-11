@@ -1,12 +1,18 @@
 package lib.prim.com.net.client;
 
-import java.util.concurrent.TimeUnit;
+import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
+import lib.prim.com.net.Interceptor.HttpLoggingInterceptor;
 import okhttp3.Call;
 import okhttp3.ConnectionPool;
+import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,7 +40,11 @@ public class OkClient implements HttpClient<OkHttpClient, Call, Request, Interce
         //默认的配置
         okHttpClient = new OkHttpClient();
         builder = okHttpClient.newBuilder();
-        builder.addInterceptor(new LoggingInterceptor());//日志拦截器
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("prim");
+        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);//log打印级别，决定了log显示的详细程度
+        loggingInterceptor.setColorLevel(Level.INFO);
+        builder.addInterceptor(loggingInterceptor);//日志拦截器
+
         builder.connectTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.readTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
@@ -52,6 +62,7 @@ public class OkClient implements HttpClient<OkHttpClient, Call, Request, Interce
 
         //配置https的域名匹配规则，不需要就不要加入，使用不当会导致https握手失败
         builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+        Log.e(TAG, "OkClient: ");
     }
 
     @Override
@@ -129,5 +140,16 @@ public class OkClient implements HttpClient<OkHttpClient, Call, Request, Interce
     @Override
     public void setBuilder(OkHttpClient.Builder builder) {
         okHttpClient = builder.build();
+    }
+
+    @Override
+    public void hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        //配置https的域名匹配规则，不需要就不要加入，使用不当会导致https握手失败
+        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+    }
+
+    @Override
+    public void cookieJar(CookieJar cookieJar) {
+        builder.cookieJar(cookieJar);
     }
 }

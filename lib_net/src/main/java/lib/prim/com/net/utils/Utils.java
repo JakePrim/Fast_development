@@ -1,6 +1,9 @@
 package lib.prim.com.net.utils;
 
+import android.text.TextUtils;
+
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -107,5 +110,36 @@ public class Utils {
         }
         builder.headers(headerBuilder.build());
         return builder;
+    }
+
+    /** 根据请求的URL 命名文件名 */
+    public static String getNetFileName(String url) {
+        String fileName = null;
+        if (TextUtils.isEmpty(fileName)) fileName = getUrlFileName(url);
+        if (TextUtils.isEmpty(fileName)) fileName = "unknowfile_" + System.currentTimeMillis();
+        try {
+            URLDecoder.decode(fileName,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return fileName;
+    }
+
+    public static String getUrlFileName(String url) {
+        String fileName = null;
+        String[] strings = url.split("/");
+        for (String str : strings) {
+            if (str.contains("?")) {
+                int endIndex = str.indexOf("?");
+                if (endIndex != -1) {
+                    fileName = str.substring(0, endIndex);
+                    return fileName;
+                }
+            }
+        }
+        if (strings.length > 0) {
+            fileName = strings[strings.length - 1];
+        }
+        return fileName;
     }
 }

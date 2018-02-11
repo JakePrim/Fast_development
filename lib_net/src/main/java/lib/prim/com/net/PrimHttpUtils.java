@@ -9,8 +9,11 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
+import javax.net.ssl.HostnameVerifier;
+
 import lib.prim.com.net.https.HttpsUtils;
 import okhttp3.Call;
+import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,6 +46,7 @@ public class PrimHttpUtils {
     private HttpParams mCommonParams;                           //全局公共请求参数
     private HttpHeaders mCommonHeaders;                         //全局公共请求头
     public static final long DEFAULT_MILLISECONDS = 60000;      //默认的超时时间
+    public static long REFRESH_TIME = 300;                      //回调刷新时间（单位ms）
 
     public static PrimHttpUtils getInstance() {
         return PrimHolder.holder;
@@ -52,8 +56,9 @@ public class PrimHttpUtils {
         private static PrimHttpUtils holder = new PrimHttpUtils();
     }
 
-    public PrimHttpUtils() {
+    PrimHttpUtils() {
         mHandler = new Handler(Looper.getMainLooper());
+        httpClient = new OkClient();
     }
 
     /** 在Application 中初始化网络请求 */
@@ -163,6 +168,25 @@ public class PrimHttpUtils {
     public PrimHttpUtils setSSLParams(HttpsUtils.SSLParams sslParams) {
         if (checkHttpClient(httpClient)) {
             httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        }
+        return this;
+    }
+
+    /** 配置https的域名匹配规则 */
+    public PrimHttpUtils hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        if (checkHttpClient(httpClient)) {
+            httpClient.hostnameVerifier(hostnameVerifier);
+        }
+        return this;
+    }
+
+    /** 自动管理cookie（或者叫session的保持） */
+    public PrimHttpUtils cookieJar(CookieJar cookieJar) {
+        //1. 使用sp保持cookie，如果cookie不过期，则一直有效
+        //2. 使用数据库保持cookie，如果cookie不过期，则一直有效
+        //3. 使用内存保持cookie，app退出后，cookie消失
+        if (checkHttpClient(httpClient)) {
+            httpClient.cookieJar(cookieJar);
         }
         return this;
     }

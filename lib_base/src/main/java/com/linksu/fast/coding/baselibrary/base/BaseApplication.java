@@ -8,15 +8,18 @@ import com.linksu.fast.coding.baselibrary.utils.Utils;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import lib.prim.com.net.Interceptor.HttpLoggingInterceptor;
 import lib.prim.com.net.PrimHttpUtils;
 import lib.prim.com.net.https.HttpsUtils;
 import lib.prim.com.net.model.HttpHeaders;
 import lib.prim.com.net.model.HttpParams;
+import okhttp3.CookieJar;
 
 /**
  * ================================================
@@ -38,21 +41,18 @@ public abstract class BaseApplication extends Application {
         initHttp();
     }
 
-    /**
-     * 获取Application
-     */
+    /** 获取Application */
     public static Context getAppContext() {
         return mInstance.getApplicationContext();
     }
 
-    /**
-     * 初始化工具类
-     */
+    /** 初始化工具类 */
     private void initUtils() {
         Utils.init(this);
         initLogger();
     }
 
+    /** 初始化logger */
     private void initLogger() {
         //------------------log 设置 ------------------//
         new PrimLogger.Builder()
@@ -65,56 +65,37 @@ public abstract class BaseApplication extends Application {
                 .setLogFilter(PrimLogger.V);// log过滤器，和logcat过滤器同理，默认Verbose
     }
 
+    /** 网络初始化 */
     private void initHttp() {
         //-------------------网络设置初始化---------------------//
         HttpHeaders headers = new HttpHeaders();
         headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
         HttpParams params = new HttpParams();
         params.put("commonParamsKey1", "commonParamsValue1");     //param支持中文,直接传,不要自己编码
-
-        //方法二：自定义信任规则，校验服务端证书
-        HttpsUtils.SSLParams sslParams2 = HttpsUtils.getSslSocketFactory(new SafeTrustManager());
-
         PrimHttpUtils.getInstance()
                 .init(this)
                 .connectTimeout(60_000)
                 .readTimeout(50_000)
-                .setSSLParams(sslParams2)
                 .addCommonHeaders(headers)
-                .addCommonParams(params);//初始化网络
+                .addCommonParams(params)
+                .setSSLParams(HttpsUtils.getSslSocketFactory(new SafeTrustManager()))
+                .cookieJar(CookieJar.NO_COOKIES)
+                .hostnameVerifier(new SafeHostnameVerifier());//初始化网络
     }
 
-    /**
-     * log 的总开关 交给子类去决定
-     *
-     * @return
-     */
+    /** log 的总开关 交给子类去决定 */
     protected abstract boolean isLogSwitch();
 
-    /**
-     * log 是否保存到文件交给子类去决定
-     *
-     * @return
-     */
+    /** log 是否保存到文件交给子类去决定 */
     protected abstract boolean isFileSwitch();
 
-    /**
-     * log 输出日志是否带边框开关交给子类去决定
-     *
-     * @return
-     */
+    /** log 输出日志是否带边框开关交给子类去决定 */
     protected abstract boolean isBorderSwitch();
 
-    /**
-     * log 设置log全局标签交给子类去决定
-     *
-     * @return
-     */
+    /** log 设置log全局标签交给子类去决定 */
     protected abstract String getGlobalTag();
 
-    /**
-     * 认证规则，具体每个业务是否需要验证，以及验证规则是什么
-     */
+    /** 认证规则，具体每个业务是否需要验证，以及验证规则是什么 */
     private class SafeTrustManager implements X509TrustManager {
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {

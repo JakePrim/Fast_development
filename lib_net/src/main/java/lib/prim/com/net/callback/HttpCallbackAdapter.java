@@ -1,5 +1,6 @@
 package lib.prim.com.net.callback;
 
+import lib.prim.com.net.model.Progress;
 import okhttp3.Call;
 import okhttp3.Response;
 import lib.prim.com.net.request.base.BaseRequest;
@@ -36,6 +37,11 @@ public abstract class HttpCallbackAdapter<T> implements HttpCallback<T> {
 
     @Override
     public void onError(Call call, Exception e, int id) {
+
+    }
+
+    @Override
+    public void downloadProgress(Progress progress) {
 
     }
 }

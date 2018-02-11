@@ -1,8 +1,6 @@
 package lib.prim.com.net.callback;
 
 
-import android.util.Log;
-
 import com.google.gson.stream.JsonReader;
 
 import org.json.JSONArray;
@@ -70,7 +68,7 @@ public class JsonCallback<T> extends HttpCallbackAdapter<T> {
             }
         }
         if (type instanceof ParameterizedType) {
-            return parseParameterizedType(response, (ParameterizedType) type);
+            return parseParametrizedType(response, (ParameterizedType) type);
         } else if (type instanceof Class) {
             return parseClass(response, (Class<?>) type);
         } else {
@@ -110,7 +108,7 @@ public class JsonCallback<T> extends HttpCallbackAdapter<T> {
         return t;
     }
 
-    private T parseParameterizedType(Response response, ParameterizedType type) throws Exception {
+    private T parseParametrizedType(Response response, ParameterizedType type) throws Exception {
         if (type == null) return null;
         ResponseBody body = response.body();
         if (body == null) return null;

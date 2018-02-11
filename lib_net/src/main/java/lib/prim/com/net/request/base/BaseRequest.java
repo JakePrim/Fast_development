@@ -1,5 +1,7 @@
 package lib.prim.com.net.request.base;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -214,13 +216,6 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         final T t;
         try {
             t = callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
-            Utils.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    callback.onSuccess(t, id);
-                    callback.onFinish(id);
-                }
-            });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             callback.onError(call, null, id);

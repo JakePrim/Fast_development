@@ -1,5 +1,6 @@
 package lib.prim.com.net.callback;
 
+import lib.prim.com.net.model.Progress;
 import okhttp3.Call;
 import lib.prim.com.net.converter.Converter;
 import lib.prim.com.net.request.base.BaseRequest;
@@ -38,6 +39,6 @@ public interface HttpCallback<T> extends Converter<T> {
 //    void uploadProgress(Progress progress);
 
     /** 下载过程中的进度回调，UI线程 */
-//    void downloadProgress(Progress progress);
+    void downloadProgress(Progress progress);
 
 }

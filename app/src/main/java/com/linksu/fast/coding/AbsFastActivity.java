@@ -10,7 +10,12 @@ import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
 import com.linksu.fast.coding.bean.ServerModel;
 
+import java.io.File;
+
+import lib.prim.com.net.callback.FileCallback;
 import lib.prim.com.net.model.LzyResponse;
+import lib.prim.com.net.model.Progress;
+import lib.prim.com.net.request.base.BaseRequest;
 import okhttp3.Call;
 import lib.prim.com.net.PrimHttpUtils;
 import lib.prim.com.net.callback.DialogCallback;
@@ -56,20 +61,46 @@ public class AbsFastActivity extends LBaseActivity {
 
     @Override
     protected void loadData() {
-        // 测试 SDK 是否正常工作的代码
         //https://api.douban.com/v2/book/1220562
-//        httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
-//        httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+        //httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
+        //httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
+//        PrimHttpUtils.getInstance()
+//                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+//                .id(1)
+//                .tag(TAG)
+//                .params("id", "0")
+//                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+//                    @Override
+//                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+//                        super.onSuccess(response, id);
+//                        PrimLogger.e(TAG, response.toString());
+//                    }
+//                });
+
         PrimHttpUtils.getInstance()
-                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
-                .id(1)
-                .tag(TAG)
-                .params("id", "0")
-                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+                .<File>get("http://server.jeasonlzy.com/OkHttpUtils/download")
+                .tag(this)
+                .id(2)
+                .enqueue(new FileCallback("prim.apk") {
                     @Override
-                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
-                        super.onSuccess(response, id);
-                        PrimLogger.e(TAG, response.toString());
+                    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
+                        tv_test.setText("开始下载 --> " + id);
+                    }
+
+                    @Override
+                    public void downloadProgress(Progress progress) {
+                        PrimLogger.e(TAG, "下载进度 --> " + progress.fraction);
+                        tv_test.setText("下载进度:" + (progress.fraction * 100) + "%" + " 下载速度:" + (progress.speed / 1024) + "K/s");
+                    }
+
+                    @Override
+                    public void onSuccess(File response, int id) {
+                        tv_test.setText("下载成功 --> " + id);
+                    }
+
+                    @Override
+                    public void onFinish(int id) {
+                        PrimLogger.e(TAG, "请求完成 --> " + id);
                     }
                 });
     }
@@ -77,8 +108,6 @@ public class AbsFastActivity extends LBaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()) {
-        }
     }
 
     @Override

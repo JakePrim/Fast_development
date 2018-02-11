@@ -1,14 +1,13 @@
 package lib.prim.com.net.client;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Call;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import lib.prim.com.net.request.GetRequest;
 import lib.prim.com.net.request.PostRequest;
+import okhttp3.CookieJar;
+import okhttp3.OkHttpClient;
 
 /**
  * ================================================
@@ -60,4 +59,10 @@ public interface HttpClient<E, A, B, C> {
 
     /** 网络请求设置 */
     void setBuilder(OkHttpClient.Builder builder);
+
+    /** 配置https的域名匹配规则 */
+    void hostnameVerifier(HostnameVerifier hostnameVerifier);
+
+    /** 自动管理cookie（或者叫session的保持） */
+    void cookieJar(CookieJar cookieJar);
 }
