@@ -64,18 +64,18 @@ public class AbsFastActivity extends LBaseActivity {
         //https://api.douban.com/v2/book/1220562
         //httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
         //httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
-//        PrimHttpUtils.getInstance()
-//                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
-//                .id(1)
-//                .tag(TAG)
-//                .params("id", "0")
-//                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
-//                    @Override
-//                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
-//                        super.onSuccess(response, id);
-//                        PrimLogger.e(TAG, response.toString());
-//                    }
-//                });
+        PrimHttpUtils.getInstance()
+                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(1)
+                .tag(TAG)
+                .params("id", "0")
+                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
+                        PrimLogger.e(TAG, response.toString());
+                    }
+                });
 
         PrimHttpUtils.getInstance()
                 .<File>get("http://server.jeasonlzy.com/OkHttpUtils/download")
