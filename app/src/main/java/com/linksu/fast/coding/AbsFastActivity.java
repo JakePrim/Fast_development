@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import lib.prim.com.net.callback.FileCallback;
+import lib.prim.com.net.callback.JsonCallback;
 import lib.prim.com.net.model.LzyResponse;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.request.base.BaseRequest;
@@ -66,7 +67,8 @@ public class AbsFastActivity extends LBaseActivity {
         //https://api.douban.com/v2/book/1220562
         //httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
         //httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
-        //json 请求
+
+        //json 带自定义加载弹窗的 post请求
         PrimHttp.getInstance()
                 .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
                 .id(1)
@@ -80,10 +82,52 @@ public class AbsFastActivity extends LBaseActivity {
                     }
                 });
 
-        //文件下载请求
+        //json 带自定义加载弹窗的 get请求
+        PrimHttp.getInstance()
+                .<LzyResponse<ServerModel>>get("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(0)
+                .tag(TAG)
+                .params("id", "0")
+                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
+                        PrimLogger.e(TAG, response.toString());
+                    }
+                });
+
+        //json 不带加载弹窗的 get 请求
+        PrimHttp.getInstance()
+                .<LzyResponse<ServerModel>>get("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(0)
+                .tag(TAG)
+                .params("id", "0")
+                .enqueue(new JsonCallback<LzyResponse<ServerModel>>() {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
+                        PrimLogger.e(TAG, response.toString());
+                    }
+                });
+
+        //json 不带加载弹窗的 post 请求
+        PrimHttp.getInstance()
+                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(0)
+                .tag(TAG)
+                .params("id", "0")
+                .enqueue(new JsonCallback<LzyResponse<ServerModel>>() {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
+                    }
+                });
+
+        //文件下载 get 请求
         PrimHttp.getInstance()
                 .<File>get("http://server.jeasonlzy.com/OkHttpUtils/download")
                 .tag(this)
+                .params("p1", "p1")
                 .id(2)
                 .enqueue(new FileCallback("prim.apk") {
                     @Override
@@ -103,7 +147,31 @@ public class AbsFastActivity extends LBaseActivity {
                     }
                 });
 
-        //上传请求
+        //文件下载 post 请求
+        PrimHttp.getInstance()
+                .<File>post("http://server.jeasonlzy.com/OkHttpUtils/download")
+                .tag(this)
+                .params("p1", "p1")
+                .id(2)
+                .enqueue(new FileCallback("prim.apk") {
+                    @Override
+                    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
+                        tv_test.setText("开始下载 --> " + id);
+                    }
+
+                    @Override
+                    public void downloadProgress(Progress progress) {
+                        PrimLogger.e(TAG, "下载进度 --> " + progress.fraction);
+                        tv_test.setText("下载进度:" + (progress.fraction * 100) + "%" + " 下载速度:" + (progress.speed / 1024) + "K/s");
+                    }
+
+                    @Override
+                    public void onSuccess(File response, int id) {
+                        tv_test.setText("下载成功 --> " + id);
+                    }
+                });
+
+        //上传请求 post
         HashMap<String, String> params = new HashMap<>();
         params.put("key1", "value1");
         params.put("key2", "这里是需要提交的json格式数据");
@@ -118,6 +186,12 @@ public class AbsFastActivity extends LBaseActivity {
                     @Override
                     public void uploadProgress(Progress progress) {
 
+                    }
+                })
+                .enqueue(new JsonCallback<LzyResponse<ServerModel>>() {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
                     }
                 });
     }
