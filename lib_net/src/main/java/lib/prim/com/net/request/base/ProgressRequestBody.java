@@ -3,10 +3,16 @@ package lib.prim.com.net.request.base;
 import java.io.IOException;
 
 import io.reactivex.annotations.Nullable;
+import lib.prim.com.net.model.Progress;
+import lib.prim.com.net.utils.Utils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okio.Buffer;
 import okio.BufferedSink;
-import lib.prim.com.net.callback.HttpCallback;
+import lib.prim.com.net.callback.Callback;
+import okio.ForwardingSink;
+import okio.Okio;
+import okio.Sink;
 
 /**
  * ================================================
@@ -20,14 +26,15 @@ import lib.prim.com.net.callback.HttpCallback;
 public class ProgressRequestBody<T> extends RequestBody {
 
     private RequestBody requestBody;         //实际的待包装请求体
-    private HttpCallback<T> callback;
+    private Callback<T> callback;
     private UploadInterceptor interceptor;
 
-    ProgressRequestBody(RequestBody requestBody, HttpCallback<T> callback) {
+    ProgressRequestBody(RequestBody requestBody, Callback<T> callback) {
         this.requestBody = requestBody;
         this.callback = callback;
     }
 
+    /** 重写调用实际的响应体的contentType */
     @Nullable
     @Override
     public MediaType contentType() {
@@ -45,15 +52,59 @@ public class ProgressRequestBody<T> extends RequestBody {
         }
     }
 
+    /** 重写进行写入 获取上传进度 */
     @Override
     public void writeTo(BufferedSink sink) throws IOException {
-//        CountingSink countingSink = new CountingSink(sink);
-//        BufferedSink bufferedSink = Okio.buffer(countingSink);
-//        requestBody.writeTo(bufferedSink);
-//        bufferedSink.flush();
+        CountingSink countingSink = new CountingSink(sink);
+        BufferedSink bufferedSink = Okio.buffer(countingSink);
+        requestBody.writeTo(bufferedSink);
+        bufferedSink.flush();
+    }
+
+    /** 具体上传写入进度的实现 */
+    private final class CountingSink extends ForwardingSink {
+
+        private Progress progress;
+
+        public CountingSink(Sink delegate) {
+            super(delegate);
+            progress = new Progress();
+            progress.totalSize = contentLength();
+        }
+
+        @Override
+        public void write(Buffer source, long byteCount) throws IOException {
+            super.write(source, byteCount);
+            //byteCount 写入当前的字节
+            Progress.changeProgress(progress, byteCount, new Progress.Action() {
+                @Override
+                public void call(Progress progress) {
+                    if (interceptor != null) {
+                        interceptor.uploadProgress(progress);
+                    } else {
+                        onProgress(progress);
+                    }
+                }
+            });
+        }
+    }
+
+    private void onProgress(final Progress progress) {
+        Utils.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.uploadProgress(progress);
+                }
+            }
+        });
+    }
+
+    public void setInterceptor(UploadInterceptor interceptor) {
+        this.interceptor = interceptor;
     }
 
     public interface UploadInterceptor {
-//        void uploadProgress(Progress progress);
+        void uploadProgress(Progress progress);
     }
 }

@@ -8,14 +8,12 @@ import com.linksu.fast.coding.baselibrary.utils.Utils;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import lib.prim.com.net.Interceptor.HttpLoggingInterceptor;
-import lib.prim.com.net.PrimHttpUtils;
+import lib.prim.com.net.PrimHttp;
 import lib.prim.com.net.https.HttpsUtils;
 import lib.prim.com.net.model.HttpHeaders;
 import lib.prim.com.net.model.HttpParams;
@@ -72,7 +70,7 @@ public abstract class BaseApplication extends Application {
         headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
         HttpParams params = new HttpParams();
         params.put("commonParamsKey1", "commonParamsValue1");     //param支持中文,直接传,不要自己编码
-        PrimHttpUtils.getInstance()
+        PrimHttp.getInstance()
                 .init(this)
                 .connectTimeout(60_000)
                 .readTimeout(50_000)

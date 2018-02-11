@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.prim.com.net.PrimHttpUtils;
+import lib.prim.com.net.PrimHttp;
 
 import static lib.prim.com.net.model.Progress.Priority.DEFAULT;
 
@@ -74,7 +74,7 @@ public class Progress implements Serializable {
         progress.tempSize += writeSize;
 
         long currentTime = SystemClock.elapsedRealtime();
-        boolean isNotify = (currentTime - progress.lastRefreshTime) >= PrimHttpUtils.REFRESH_TIME;
+        boolean isNotify = (currentTime - progress.lastRefreshTime) >= PrimHttp.REFRESH_TIME;
         if (isNotify || progress.currentSize == totalSize) {
             long diffTime = currentTime - progress.lastRefreshTime;
             if (diffTime == 0) diffTime = 1;

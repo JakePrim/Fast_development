@@ -14,7 +14,7 @@ import lib.prim.com.net.request.base.BaseRequest;
  * 修订历史：
  * ================================================
  */
-public abstract class HttpCallbackAdapter<T> implements HttpCallback<T> {
+public abstract class CallbackAdapter<T> implements Callback<T> {
     @Override
     public void onStart(BaseRequest<T, ? extends BaseRequest> request, int id) {
 
@@ -42,6 +42,11 @@ public abstract class HttpCallbackAdapter<T> implements HttpCallback<T> {
 
     @Override
     public void downloadProgress(Progress progress) {
+
+    }
+
+    @Override
+    public void uploadProgress(Progress progress) {
 
     }
 }

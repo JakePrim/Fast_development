@@ -2,13 +2,12 @@ package lib.prim.com.net.converter;
 
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import lib.prim.com.net.callback.HttpCallback;
+import lib.prim.com.net.callback.Callback;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.utils.IOUtils;
 import lib.prim.com.net.utils.Utils;
@@ -30,7 +29,7 @@ public class FileConvert implements Converter<File> {
 
     private String folder;                  //目标文件存储的文件夹路径
     private String fileName;                //目标文件存储的文件名
-    private HttpCallback<File> callback;        //下载回调
+    private Callback<File> callback;        //下载回调
 
     private static final String TAG = "FileConvert";
 
@@ -47,7 +46,7 @@ public class FileConvert implements Converter<File> {
         this.fileName = fileName;
     }
 
-    public void setCallback(HttpCallback<File> callback) {
+    public void setCallback(Callback<File> callback) {
         this.callback = callback;
     }
 

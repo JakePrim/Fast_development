@@ -11,7 +11,7 @@ import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import lib.prim.com.net.PrimHttpUtils;
+import lib.prim.com.net.PrimHttp;
 import lib.prim.com.net.model.HttpHeaders;
 import lib.prim.com.net.model.HttpParams;
 
@@ -35,7 +35,7 @@ public class Utils {
 
     /** 在主线程中运行 */
     public static void runOnUiThread(Runnable runnable) {
-        PrimHttpUtils.getInstance().getHandler().post(runnable);
+        PrimHttp.getInstance().getHandler().post(runnable);
     }
 
     /** 拼接URL get */

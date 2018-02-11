@@ -18,7 +18,7 @@ import okhttp3.Response;
  * 修订历史：
  * ================================================
  */
-public class JsonCallback<T> extends HttpCallbackAdapter<T> {
+public class JsonCallback<T> extends CallbackAdapter<T> {
     private Type type;
     private Class<T> clazz;
 

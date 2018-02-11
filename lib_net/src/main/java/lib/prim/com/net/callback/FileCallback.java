@@ -16,7 +16,7 @@ import okhttp3.Response;
  * 修订历史：
  * ================================================
  */
-public class FileCallback extends HttpCallbackAdapter<File> {
+public class FileCallback extends CallbackAdapter<File> {
 
     private FileConvert fileConvert;
 

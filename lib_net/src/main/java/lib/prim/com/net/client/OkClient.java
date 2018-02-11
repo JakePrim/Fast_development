@@ -10,16 +10,15 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
 import lib.prim.com.net.Interceptor.HttpLoggingInterceptor;
+import lib.prim.com.net.PrimHttp;
 import okhttp3.Call;
 import okhttp3.ConnectionPool;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import lib.prim.com.net.PrimHttpUtils;
 import lib.prim.com.net.https.HttpsUtils;
 import lib.prim.com.net.request.GetRequest;
-import lib.prim.com.net.Interceptor.LoggingInterceptor;
 import lib.prim.com.net.request.PostRequest;
 
 /**
@@ -45,9 +44,9 @@ public class OkClient implements HttpClient<OkHttpClient, Call, Request, Interce
         loggingInterceptor.setColorLevel(Level.INFO);
         builder.addInterceptor(loggingInterceptor);//日志拦截器
 
-        builder.connectTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.readTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.writeTimeout(PrimHttpUtils.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.connectTimeout(PrimHttp.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.readTimeout(PrimHttp.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.writeTimeout(PrimHttp.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectionPool(new ConnectionPool(8, 15, TimeUnit.MILLISECONDS));
 
         //方法一: 默认信任所有证书，不安全有风险

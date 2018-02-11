@@ -35,10 +35,10 @@ import lib.prim.com.net.utils.Utils;
  * 修订历史：
  * ================================================
  */
-public class PrimHttpUtils {
+public class PrimHttp {
 
     private HttpClient httpClient;                      //网络请求客户 默认为Okhttp
-    private static String TAG = "PrimHttpUtils";
+    private static String TAG = "PrimHttp";
     private WeakReference<Activity> weakActivity;       //用于获取在哪个Activity执行网络请求
     private boolean isCache;
     private Handler mHandler;                                   //用于在主线程执行的调度器
@@ -48,39 +48,39 @@ public class PrimHttpUtils {
     public static final long DEFAULT_MILLISECONDS = 60000;      //默认的超时时间
     public static long REFRESH_TIME = 300;                      //回调刷新时间（单位ms）
 
-    public static PrimHttpUtils getInstance() {
+    public static PrimHttp getInstance() {
         return PrimHolder.holder;
     }
 
     private static class PrimHolder {
-        private static PrimHttpUtils holder = new PrimHttpUtils();
+        private static PrimHttp holder = new PrimHttp();
     }
 
-    PrimHttpUtils() {
+    PrimHttp() {
         mHandler = new Handler(Looper.getMainLooper());
         httpClient = new OkClient();
     }
 
     /** 在Application 中初始化网络请求 */
-    public PrimHttpUtils init(Application context) {
+    public PrimHttp init(Application context) {
         this.context = new WeakReference<>(context);
         return this;
     }
 
     /** 获取全局上下文 */
     public Context getContext() {
-        Utils.checkNotNull(context, "please call PrimHttpUtils.getInstance().init() first in application!");
+        Utils.checkNotNull(context, "please call PrimHttp.getInstance().init() first in application!");
         return context.get();
     }
 
     /** 初始化context */
-    public PrimHttpUtils with(Activity context) {
+    public PrimHttp with(Activity context) {
         this.weakActivity = new WeakReference<>(context);
         return this;
     }
 
     /** 是否缓存 */
-    public PrimHttpUtils cache(boolean isCache) {
+    public PrimHttp cache(boolean isCache) {
         this.isCache = isCache;
         return this;
     }
@@ -102,7 +102,7 @@ public class PrimHttpUtils {
     }
 
     /** 在此方法中设置网络请求客户端 */
-    public PrimHttpUtils setHttpClient(HttpClient httpClient) {
+    public PrimHttp setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
         return this;
     }
@@ -133,7 +133,7 @@ public class PrimHttpUtils {
     }
 
     /** 链接超时 */
-    public PrimHttpUtils connectTimeout(long time) {
+    public PrimHttp connectTimeout(long time) {
         if (checkHttpClient(httpClient)) {
             httpClient.connectTimeout(time);
         }
@@ -141,7 +141,7 @@ public class PrimHttpUtils {
     }
 
     /** 读取超时 */
-    public PrimHttpUtils readTimeout(long time) {
+    public PrimHttp readTimeout(long time) {
         if (checkHttpClient(httpClient)) {
             httpClient.readTimeout(time);
         }
@@ -149,7 +149,7 @@ public class PrimHttpUtils {
     }
 
     /** 写入超时 */
-    public PrimHttpUtils writeTimeout(long time) {
+    public PrimHttp writeTimeout(long time) {
         if (checkHttpClient(httpClient)) {
             httpClient.writeTimeout(time);
         }
@@ -157,7 +157,7 @@ public class PrimHttpUtils {
     }
 
     /** 设置拦截 */
-    public PrimHttpUtils addInterceptor(Interceptor interceptor) {
+    public PrimHttp addInterceptor(Interceptor interceptor) {
         if (checkHttpClient(httpClient)) {
             httpClient.addInterceptor(interceptor);
         }
@@ -165,7 +165,7 @@ public class PrimHttpUtils {
     }
 
     /** 设置证书 */
-    public PrimHttpUtils setSSLParams(HttpsUtils.SSLParams sslParams) {
+    public PrimHttp setSSLParams(HttpsUtils.SSLParams sslParams) {
         if (checkHttpClient(httpClient)) {
             httpClient.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
         }
@@ -173,7 +173,7 @@ public class PrimHttpUtils {
     }
 
     /** 配置https的域名匹配规则 */
-    public PrimHttpUtils hostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public PrimHttp hostnameVerifier(HostnameVerifier hostnameVerifier) {
         if (checkHttpClient(httpClient)) {
             httpClient.hostnameVerifier(hostnameVerifier);
         }
@@ -181,7 +181,7 @@ public class PrimHttpUtils {
     }
 
     /** 自动管理cookie（或者叫session的保持） */
-    public PrimHttpUtils cookieJar(CookieJar cookieJar) {
+    public PrimHttp cookieJar(CookieJar cookieJar) {
         //1. 使用sp保持cookie，如果cookie不过期，则一直有效
         //2. 使用数据库保持cookie，如果cookie不过期，则一直有效
         //3. 使用内存保持cookie，app退出后，cookie消失
@@ -192,7 +192,7 @@ public class PrimHttpUtils {
     }
 
     /** 设置okhttpClient */
-    public PrimHttpUtils setOkhttpClient(OkHttpClient.Builder builder) {
+    public PrimHttp setOkhttpClient(OkHttpClient.Builder builder) {
         if (checkHttpClient(httpClient)) {
             httpClient.setBuilder(builder);
         }
@@ -210,14 +210,14 @@ public class PrimHttpUtils {
     }
 
     /** 添加全局公共参数 */
-    public PrimHttpUtils addCommonParams(HttpParams params) {
+    public PrimHttp addCommonParams(HttpParams params) {
         if (mCommonParams == null) mCommonParams = new HttpParams();
         mCommonParams.put(params);
         return this;
     }
 
     /** 添加全局公共参数 */
-    public PrimHttpUtils addCommonParams(String key, String value) {
+    public PrimHttp addCommonParams(String key, String value) {
         if (mCommonParams == null) mCommonParams = new HttpParams(key, value);
         mCommonParams.put(key, value);
         return this;
@@ -229,14 +229,14 @@ public class PrimHttpUtils {
     }
 
     /** 添加全局的请求头 */
-    public PrimHttpUtils addCommonHeaders(HttpHeaders params) {
+    public PrimHttp addCommonHeaders(HttpHeaders params) {
         if (mCommonHeaders == null) mCommonHeaders = new HttpHeaders();
         mCommonHeaders.put(params);
         return this;
     }
 
     /** 添加全局的请求头 */
-    public PrimHttpUtils addCommonHeaders(String key, String value) {
+    public PrimHttp addCommonHeaders(String key, String value) {
         if (mCommonHeaders == null) mCommonHeaders = new HttpHeaders(key, value);
         mCommonHeaders.put(key, value);
         return this;

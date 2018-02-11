@@ -10,16 +10,18 @@ import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
 import com.linksu.fast.coding.bean.ServerModel;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.HashMap;
 
 import lib.prim.com.net.callback.FileCallback;
 import lib.prim.com.net.model.LzyResponse;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.request.base.BaseRequest;
-import okhttp3.Call;
-import lib.prim.com.net.PrimHttpUtils;
+import lib.prim.com.net.PrimHttp;
 import lib.prim.com.net.callback.DialogCallback;
-import okhttp3.Response;
+import lib.prim.com.net.request.base.ProgressRequestBody;
 
 public class AbsFastActivity extends LBaseActivity {
 
@@ -64,7 +66,8 @@ public class AbsFastActivity extends LBaseActivity {
         //https://api.douban.com/v2/book/1220562
         //httpUtil.get("/v2/movie/subject/1764796", 1, TestBean.class);
         //httpUtil.get("/v2/movie/in_theaters", 2, TestBean.class);
-        PrimHttpUtils.getInstance()
+        //json 请求
+        PrimHttp.getInstance()
                 .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
                 .id(1)
                 .tag(TAG)
@@ -77,7 +80,8 @@ public class AbsFastActivity extends LBaseActivity {
                     }
                 });
 
-        PrimHttpUtils.getInstance()
+        //文件下载请求
+        PrimHttp.getInstance()
                 .<File>get("http://server.jeasonlzy.com/OkHttpUtils/download")
                 .tag(this)
                 .id(2)
@@ -97,10 +101,23 @@ public class AbsFastActivity extends LBaseActivity {
                     public void onSuccess(File response, int id) {
                         tv_test.setText("下载成功 --> " + id);
                     }
+                });
 
+        //上传请求
+        HashMap<String, String> params = new HashMap<>();
+        params.put("key1", "value1");
+        params.put("key2", "这里是需要提交的json格式数据");
+        params.put("key3", "也可以使用三方工具将对象转成json字符串");
+        params.put("key4", "其实你怎么高兴怎么写都行");
+        JSONObject jsonObject = new JSONObject(params);
+        PrimHttp.getInstance()
+                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/download")
+                .tag(this)
+                .id(3)
+                .setUploadInterceptor(new ProgressRequestBody.UploadInterceptor() {
                     @Override
-                    public void onFinish(int id) {
-                        PrimLogger.e(TAG, "请求完成 --> " + id);
+                    public void uploadProgress(Progress progress) {
+
                     }
                 });
     }

@@ -1,17 +1,14 @@
 package lib.prim.com.net.request.base;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.Serializable;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import lib.prim.com.net.PrimHttpUtils;
-import lib.prim.com.net.callback.HttpCallback;
+import lib.prim.com.net.PrimHttp;
+import lib.prim.com.net.callback.Callback;
 import lib.prim.com.net.converter.Converter;
 import lib.prim.com.net.model.HttpHeaders;
 import lib.prim.com.net.model.HttpParams;
@@ -35,13 +32,15 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     protected int id;
     protected HttpParams params;
     protected HttpHeaders headers;
+    //transient 不写入序列化中去
     protected transient okhttp3.Request mRequest;
-    protected transient HttpCallback<T> callback;
+    protected transient Callback<T> callback;
     protected transient Converter<T> converter;
+    protected transient ProgressRequestBody.UploadInterceptor uploadInterceptor;
 
     public BaseRequest(String url) {
         this.url = url;
-        PrimHttpUtils prim = PrimHttpUtils.getInstance();
+        PrimHttp prim = PrimHttp.getInstance();
         if (prim.getCommonParams() != null) {
             params = prim.getCommonParams();
         } else {
@@ -76,6 +75,12 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     public R converter(Converter<T> converter) {
         Utils.checkNotNull(converter, "converter == null");
         this.converter = converter;
+        return (R) this;
+    }
+
+    public R setUploadInterceptor(ProgressRequestBody.UploadInterceptor interceptor) {
+        Utils.checkNotNull(interceptor, "UploadInterceptor == null");
+        this.uploadInterceptor = interceptor;
         return (R) this;
     }
 
@@ -152,7 +157,7 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         return mRequest;
     }
 
-    public void setCallback(HttpCallback<T> callback) {
+    public void setCallback(Callback<T> callback) {
         this.callback = callback;
     }
 
@@ -169,12 +174,12 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         RequestBody requestBody = generateRequestBody();
         if (requestBody != null) {
             ProgressRequestBody<T> progressRequestBody = new ProgressRequestBody<>(requestBody, callback);
-//            progressRequestBody.setInterceptor(uploadInterceptor);
+            progressRequestBody.setInterceptor(uploadInterceptor);
             mRequest = generateRequest(progressRequestBody);
         } else {
             mRequest = generateRequest(null);
         }
-        return PrimHttpUtils.getInstance().startRequest(mRequest);
+        return PrimHttp.getInstance().startRequest(mRequest);
     }
 
     /** 同步调用，阻塞方法，同步请求执行 */
@@ -183,11 +188,11 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     }
 
     /** 异步调用,非阻塞方法,但是回调在子线程中执行 */
-    public void enqueue(final HttpCallback<T> callback) {
+    public void enqueue(final Callback<T> callback) {
         Utils.checkNotNull(callback, "callback == null");
         this.callback = callback;
         callback.onStart(this, id);
-        getRawCall().enqueue(new Callback() {
+        getRawCall().enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
                 failure(call, e, callback);
@@ -201,7 +206,7 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     }
 
     /** 将请求到的错误信息 post 到主线程中去 用于界面UI的反馈 */
-    private void failure(final Call call, final IOException e, final HttpCallback<T> callback) {
+    private void failure(final Call call, final IOException e, final Callback<T> callback) {
         Utils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -212,10 +217,9 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
     }
 
     /** 将请求到的结果 post 到主线程中去 */
-    private void response(final Call call, final Response response, final HttpCallback<T> callback) {
-        final T t;
+    private void response(final Call call, final Response response, final Callback<T> callback) {
         try {
-            t = callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
+            callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             callback.onError(call, null, id);
