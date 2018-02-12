@@ -10,8 +10,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib_base" />
+            <option value="$PROJECT_DIR$/lib_db" />
             <option value="$PROJECT_DIR$/lib_net" />
             <option value="$PROJECT_DIR$/module_common" />
+            <option value="$PROJECT_DIR$/module_test" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

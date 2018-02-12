@@ -61,8 +61,7 @@ public class Utils {
 
     /** 生成类似表单的请求体 */
     public static RequestBody generateMultipartRequestBody(HttpParams params, boolean isMultipart) {
-        if (params.commonParams.isEmpty() && !isMultipart) {
-            //表单提交，没有文件
+        if (params.commonParams.isEmpty() && !isMultipart) {//上传普通的键值对
             FormBody.Builder bodyBuilder = new FormBody.Builder();
             for (Map.Entry<String, String> entry : params.commonParams.entrySet()) {
                 bodyBuilder.addEncoded(entry.getKey(), entry.getValue());

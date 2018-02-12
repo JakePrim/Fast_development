@@ -29,6 +29,9 @@ public abstract class HasBodyRequest<T, R extends HasBodyRequest> extends BaseRe
 
     @Override
     protected RequestBody generateRequestBody() {
+        //RequestBody.create(MEDIA_TYPE_MARKDOWN, file)
+        //RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain;charset=utf-8"),
+        //"{username:admin;password:admin}");
         return Utils.generateMultipartRequestBody(params, isMultipart);
     }
 

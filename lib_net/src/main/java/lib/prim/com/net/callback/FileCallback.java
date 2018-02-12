@@ -3,6 +3,8 @@ package lib.prim.com.net.callback;
 import java.io.File;
 
 import lib.prim.com.net.converter.FileConvert;
+import lib.prim.com.net.model.Progress;
+import lib.prim.com.net.request.base.BaseRequest;
 import lib.prim.com.net.utils.Utils;
 import okhttp3.Response;
 

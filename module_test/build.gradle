@@ -1,0 +1,55 @@
+//if (isBuildModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+//} else {
+//    apply plugin: 'com.android.library'
+//}
+
+android {
+    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
+    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion sdkVersion.MIN_SDK_VERSION
+        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        versionCode projextVersion.VERSION_CODE
+        versionName projextVersion.VERSION_NAME
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        resourcePrefix "test_" // 防止资源冲突
+        // 指定支持的so架构
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a'//, 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+//            if (isBuildModule.toBoolean()) {
+//                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+//            } else {
+//                manifest.srcFile 'src/main/release/AndroidManifest.xml'
+//            }
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':lib_base')
+}

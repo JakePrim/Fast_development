@@ -222,8 +222,13 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
             callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
         } catch (Throwable throwable) {
             throwable.printStackTrace();
-            callback.onError(call, null, id);
-            callback.onFinish(id);
+            Utils.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onError(call, null, id);
+                    callback.onFinish(id);
+                }
+            });
         }
     }
 
