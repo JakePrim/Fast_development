@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,91 +7,149 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="prim.com.module_test.Main2Activity"
+    tools:context="prim.com.module_test.net.Main2Activity"
     tools:showIn="@layout/test_activity_main2">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请选择请求方式:"/>
-
-    <RadioGroup
-        android:id="@+id/test_net_type_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/get"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GET请求"/>
-
-        <RadioButton
-            android:id="@+id/post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="POST请求"/>
-    </RadioGroup>
-
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="输入请求地址的url"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请选择请求类型："/>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="json请求"/>
+            android:text=" 请选择请求方式:"/>
 
-        <RadioButton
+        <RadioGroup
+            android:id="@+id/test_net_type_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="下载请求"/>
+            android:orientation="horizontal">
 
-        <RadioButton
+            <RadioButton
+                android:id="@+id/get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GET请求"/>
+
+            <RadioButton
+                android:id="@+id/post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="POST请求"/>
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/et_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="http://server.jeasonlzy.com/OkHttpUtils/"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上传请求"/>
-    </RadioGroup>
+            android:text=" 请选择请求类型："/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="请选择请求回调："/>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <RadioButton
+        <RadioGroup
+            android:id="@+id/requestType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="带弹窗的回调"/>
+            android:orientation="vertical">
 
-        <RadioButton
+            <RadioButton
+                android:id="@+id/json"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="json请求"/>
+
+            <RadioButton
+                android:id="@+id/download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载请求"/>
+
+            <RadioButton
+                android:id="@+id/up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传请求"/>
+
+        </RadioGroup>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="不带弹窗的回调"/>
-    </RadioGroup>
+            android:text="请选择上传请求的类型:"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请求日志:"/>
+        <RadioGroup
+            android:id="@+id/upType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/up_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传一个文件请求不带其他参数"/>
+
+            <RadioButton
+                android:id="@+id/up_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传一个或多个文件请求可以带其他参数"/>
+
+            <RadioButton
+                android:id="@+id/up_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传一个字符串"/>
+
+            <RadioButton
+                android:id="@+id/up_bytes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传一个字节数组"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text=" 请选择请求回调："/>
+
+        <RadioGroup
+            android:id="@+id/requestCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/call_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="带加载弹窗的回调"/>
+
+            <RadioButton
+                android:id="@+id/call_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="带进度弹窗的回调"/>
+
+            <RadioButton
+                android:id="@+id/call_not"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="不带弹窗的回调具体的逻辑自己处理"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 请求日志:"/>
+
+        <TextView
+            android:id="@+id/log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

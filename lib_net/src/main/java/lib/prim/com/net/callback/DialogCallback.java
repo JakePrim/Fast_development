@@ -32,7 +32,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
         dialog.setMessage("请求网络中...");
     }
 
-    public DialogCallback(Activity activity) {
+    protected DialogCallback(Activity activity) {
         super();
         initDialog(activity);
     }
