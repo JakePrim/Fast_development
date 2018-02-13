@@ -47,6 +47,7 @@ public class HttpParams implements Serializable {
 
     private void init() {
         commonParams = new LinkedHashMap<>();
+        fileParamsMap = new LinkedHashMap<>();
     }
 
     public void put(String key, String value) {

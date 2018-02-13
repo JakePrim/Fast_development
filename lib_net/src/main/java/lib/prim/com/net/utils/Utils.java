@@ -7,11 +7,14 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
+import lib.prim.com.net.model.FileWrapper;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import lib.prim.com.net.PrimHttp;
@@ -70,30 +73,25 @@ public class Utils {
                 bodyBuilder.addEncoded(entry.getKey(), entry.getValue());
             }
             return bodyBuilder.build();
+        } else {
+            //表单提交，有文件
+            MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            //拼接键值对
+            if (!params.commonParams.isEmpty()) {
+                for (Map.Entry<String, String> entry : params.commonParams.entrySet()) {
+                    multipartBodybuilder.addFormDataPart(entry.getKey(), entry.getValue());
+                }
+            }
+            //拼接文件
+            for (Map.Entry<String, List<FileWrapper>> entry : params.fileParamsMap.entrySet()) {
+                List<FileWrapper> fileValues = entry.getValue();
+                for (FileWrapper fileWrapper : fileValues) {
+                    RequestBody fileBody = RequestBody.create(fileWrapper.mediaType, fileWrapper.file);
+                    multipartBodybuilder.addFormDataPart(entry.getKey(), fileWrapper.fileName, fileBody);
+                }
+            }
+            return multipartBodybuilder.build();
         }
-//        else {
-//            //表单提交，有文件
-//            MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//            //拼接键值对
-//            if (!params.urlParamsMap.isEmpty()) {
-//                for (Map.Entry<String, List<String>> entry : params.urlParamsMap.entrySet()) {
-//                    List<String> urlValues = entry.getValue();
-//                    for (String value : urlValues) {
-//                        multipartBodybuilder.addFormDataPart(entry.getKey(), value);
-//                    }
-//                }
-//            }
-//            //拼接文件
-//            for (Map.Entry<String, List<HttpParams.FileWrapper>> entry : params.fileParamsMap.entrySet()) {
-//                List<HttpParams.FileWrapper> fileValues = entry.getValue();
-//                for (HttpParams.FileWrapper fileWrapper : fileValues) {
-//                    RequestBody fileBody = RequestBody.create(fileWrapper.contentType, fileWrapper.file);
-//                    multipartBodybuilder.addFormDataPart(entry.getKey(), fileWrapper.fileName, fileBody);
-//                }
-//            }
-//            return multipartBodybuilder.build();
-//        }
-        return new FormBody.Builder().build();
     }
 
     /** 根据文件名获取MIME类型 */

@@ -2,6 +2,7 @@ package lib.prim.com.net.callback;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.view.Window;
 
 import lib.prim.com.net.callback.custom.JsonCallback;
@@ -18,8 +19,10 @@ import lib.prim.com.net.request.base.BaseRequest;
  * 修订历史：
  * ================================================
  */
-public abstract class JsonDialogCallback<T> extends JsonCallback<T> {
+public abstract class DialogCallback<T> extends JsonCallback<T> {
     private ProgressDialog dialog;
+
+    private static final String TAG = "DialogCallback";
 
     private void initDialog(Activity activity) {
         dialog = new ProgressDialog(activity);
@@ -29,7 +32,7 @@ public abstract class JsonDialogCallback<T> extends JsonCallback<T> {
         dialog.setMessage("请求网络中...");
     }
 
-    public JsonDialogCallback(Activity activity) {
+    public DialogCallback(Activity activity) {
         super();
         initDialog(activity);
     }

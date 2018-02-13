@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Window;
 
-import java.io.File;
-
-import lib.prim.com.net.callback.custom.UploadCallback;
+import lib.prim.com.net.callback.custom.JsonCallback;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.request.base.BaseRequest;
 import okhttp3.Call;
@@ -21,11 +19,10 @@ import okhttp3.Call;
  * 修订历史：
  * ================================================
  */
-public class UploadDialogCallback extends UploadCallback {
+public class UploadDialogCallback<T> extends JsonCallback<T> {
     private ProgressDialog dialog;
 
-    public UploadDialogCallback(Activity activity, File file) {
-        super(file);
+    public UploadDialogCallback(Activity activity) {
         initDialog(activity);
     }
 
@@ -38,7 +35,7 @@ public class UploadDialogCallback extends UploadCallback {
     }
 
     @Override
-    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
+    public void onStart(BaseRequest<T, ? extends BaseRequest> request, int id) {
         super.onStart(request, id);
         dialog.show();
     }
@@ -57,7 +54,7 @@ public class UploadDialogCallback extends UploadCallback {
     }
 
     @Override
-    public void onSuccess(File response, int id) {
+    public void onSuccess(T response, int id) {
         super.onSuccess(response, id);
         dialog.setMessage("上传成功");
     }

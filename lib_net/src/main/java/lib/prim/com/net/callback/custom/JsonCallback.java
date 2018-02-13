@@ -1,6 +1,8 @@
 package lib.prim.com.net.callback.custom;
 
 
+import android.util.Log;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -22,6 +24,8 @@ import okhttp3.Response;
 public class JsonCallback<T> extends CallbackAdapter<T> {
     private Type type;
     private Class<T> clazz;
+
+    private static final String TAG = "JsonCallback";
 
     public JsonCallback() {
     }
@@ -60,18 +64,15 @@ public class JsonCallback<T> extends CallbackAdapter<T> {
             }
         }
         final JsonConvert<T> convert = new JsonConvert<>(type);
+        final T t = convert.convertResponse(response, id);
         Utils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    onSuccess(convert.convertResponse(response, id), id);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
+                onSuccess(t, id);
                 onFinish(id);
             }
         });
-        return convert.convertResponse(response, id);
+        return t;
 
     }
 

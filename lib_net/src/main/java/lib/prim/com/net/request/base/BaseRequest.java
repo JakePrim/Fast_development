@@ -1,5 +1,7 @@
 package lib.prim.com.net.request.base;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -216,12 +218,13 @@ public abstract class BaseRequest<T, R extends BaseRequest> implements Serializa
         });
     }
 
+    private static final String TAG = "BaseRequest";
     /** 将请求到的结果 post 到主线程中去 */
     private void response(final Call call, final Response response, final Callback<T> callback) {
         try {
             callback.convertResponse(response, id);//注意:此处在子线程中执行数据的解析与转换 不能进行UI的操作
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            Log.e(TAG, "response: " + "数据转换异常");
             Utils.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
