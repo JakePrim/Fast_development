@@ -1,5 +1,9 @@
 package lib.prim.com.net.request.base;
 
+import java.io.File;
+import java.util.List;
+
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import lib.prim.com.net.utils.Utils;
 
@@ -17,6 +21,11 @@ public abstract class HasBodyRequest<T, R extends HasBodyRequest> extends BaseRe
     protected boolean isMultipart = false;  //是否强制使用 multipart/form-data 表单上传 键值对上传参数
     protected boolean isSpliceUrl = false;  //是否拼接url参数
 
+    protected RequestBody requestBody;
+
+    protected transient MediaType mediaType; //上传的类型
+    protected File file;                     //上传的文件
+
     public HasBodyRequest(String url) {
         super(url);
     }
@@ -27,11 +36,42 @@ public abstract class HasBodyRequest<T, R extends HasBodyRequest> extends BaseRe
         return (R) this;
     }
 
+    /** 上传一个文件 */
+    @SuppressWarnings("unchecked")
+    public R params(String key, File file) {
+        params.put(key, file);
+        return (R) this;
+    }
+
+    /** 上传多个文件 */
+    @SuppressWarnings("unchecked")
+    public R params(String key, List<File> files) {
+        params.putFiles(key, files);
+        return (R) this;
+    }
+
+    /** 只上传一个文件没有其他参数 用此方法设置其他参数无效 */
+    public R onlyUpFile(File file) {
+        this.file = file;
+        this.mediaType = Utils.guessMimeType(file.getName());
+        return (R) this;
+    }
+
+    /** 只上传一个文件没有其他参数 用此方法设置其他参数无效 */
+    public R onlyUpFile(File file, MediaType mediaType) {
+        this.file = file;
+        this.mediaType = mediaType;
+        return (R) this;
+    }
+
     @Override
     protected RequestBody generateRequestBody() {
         //RequestBody.create(MEDIA_TYPE_MARKDOWN, file)
         //RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain;charset=utf-8"),
         //"{username:admin;password:admin}");
+        if (file != null && mediaType != null){
+            return RequestBody.create(mediaType,file);
+        }
         return Utils.generateMultipartRequestBody(params, isMultipart);
     }
 

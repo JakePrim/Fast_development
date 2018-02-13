@@ -1,9 +1,10 @@
-package lib.prim.com.net.callback;
+package lib.prim.com.net.callback.custom;
 
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import lib.prim.com.net.callback.base.CallbackAdapter;
 import lib.prim.com.net.converter.JsonConvert;
 import lib.prim.com.net.request.base.BaseRequest;
 import lib.prim.com.net.utils.Utils;

@@ -15,7 +15,7 @@ import static lib.prim.com.net.model.Progress.Priority.DEFAULT;
  * 作    者：linksus
  * 版    本：1.0
  * 创建日期：2/11 0011
- * 描    述：进度类
+ * 描    述：进度的包装类
  * 修订历史：
  * ================================================
  */
@@ -102,7 +102,7 @@ public class Progress implements Serializable {
         return sum / speedBuffer.size();
     }
 
-     public interface Action {
+    public interface Action {
         void call(Progress progress);
     }
 }

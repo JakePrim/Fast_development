@@ -1,6 +1,7 @@
 package com.linksu.fast.coding;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -8,21 +9,17 @@ import android.widget.TextView;
 import com.linksu.fast.coding.baselibrary.base.activity.LBaseActivity;
 import com.linksu.fast.coding.baselibrary.enetity.BaseEventBusBean;
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
-import com.linksu.fast.coding.bean.ServerModel;
-
-import org.json.JSONObject;
 
 import java.io.File;
-import java.util.HashMap;
 
-import lib.prim.com.net.callback.FileCallback;
-import lib.prim.com.net.callback.JsonCallback;
-import lib.prim.com.net.model.LzyResponse;
+import lib.prim.com.net.callback.UploadDialogCallback;
+import lib.prim.com.net.callback.custom.UploadCallback;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.request.base.BaseRequest;
 import lib.prim.com.net.PrimHttp;
-import lib.prim.com.net.callback.DialogCallback;
-import lib.prim.com.net.request.base.ProgressRequestBody;
+import okhttp3.Call;
+
+import static lib.prim.com.net.converter.FileConvert.DM_TARGET_FOLDER;
 
 public class AbsFastActivity extends LBaseActivity {
 
@@ -74,7 +71,7 @@ public class AbsFastActivity extends LBaseActivity {
 //                .id(1)
 //                .tag(TAG)
 //                .params("id", "0")
-//                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+//                .enqueue(new JsonDialogCallback<LzyResponse<ServerModel>>(this) {
 //                    @Override
 //                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
 //                        super.onSuccess(response, id);
@@ -88,7 +85,7 @@ public class AbsFastActivity extends LBaseActivity {
 //                .id(0)
 //                .tag(TAG)
 //                .params("id", "0")
-//                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+//                .enqueue(new JsonDialogCallback<LzyResponse<ServerModel>>(this) {
 //                    @Override
 //                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
 //                        super.onSuccess(response, id);
@@ -129,7 +126,7 @@ public class AbsFastActivity extends LBaseActivity {
 //                .tag(this)
 //                .params("p1", "p1")
 //                .id(2)
-//                .enqueue(new FileCallback("prim.apk") {
+//                .enqueue(new DownloadCallback("prim.apk") {
 //                    @Override
 //                    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
 //                        tv_test.setText("开始下载 --> " + id);
@@ -153,7 +150,7 @@ public class AbsFastActivity extends LBaseActivity {
 //                .tag(this)
 //                .params("p1", "p1")
 //                .id(2)
-//                .enqueue(new FileCallback("prim.apk") {
+//                .enqueue(new DownloadCallback("prim.apk") {
 //                    @Override
 //                    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
 //                        tv_test.setText("开始下载 --> " + id);
@@ -171,28 +168,46 @@ public class AbsFastActivity extends LBaseActivity {
 //                    }
 //                });
 
-        //上传请求 post
-        HashMap<String, String> params = new HashMap<>();
-        params.put("key1", "value1");
-        params.put("key2", "这里是需要提交的json格式数据");
-        params.put("key3", "也可以使用三方工具将对象转成json字符串");
-        params.put("key4", "其实你怎么高兴怎么写都行");
-        JSONObject jsonObject = new JSONObject(params);
+        //上传文件 post
+        final File file = new File(Environment.getExternalStorageDirectory() + DM_TARGET_FOLDER + "prim.apk");
+//        PrimHttp.getInstance()
+//                .<File>post("http://server.jeasonlzy.com/OkHttpUtils/upload")
+//                .tag(this)
+//                .id(3)
+//                .onlyUpFile(file)
+//                .enqueue(new UploadCallback(file) {
+//                    @Override
+//                    public void onSuccess(File response, int id) {
+//                        super.onSuccess(response, id);
+//                        PrimLogger.e("onSuccess" + response.getName());
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        super.onError(call, e, id);
+//                        PrimLogger.e("onError");
+//                    }
+//
+//                    @Override
+//                    public void uploadProgress(Progress progress) {
+//                        super.uploadProgress(progress);
+//                        PrimLogger.e("uploadProgress");
+//                        PrimLogger.e(progress.fraction + "%");
+//                    }
+//
+//                    @Override
+//                    public void onStart(BaseRequest<File, ? extends BaseRequest> request, int id) {
+//                        super.onStart(request, id);
+//                        PrimLogger.e("onStart");
+//                    }
+//                });
+
         PrimHttp.getInstance()
-                .<LzyResponse<ServerModel>>post("http://server.jeasonlzy.com/OkHttpUtils/download")
+                .<File>post("http://server.jeasonlzy.com/OkHttpUtils/upload")
                 .tag(this)
                 .id(3)
-                .setUploadInterceptor(new ProgressRequestBody.UploadInterceptor() {
-                    @Override
-                    public void uploadProgress(Progress progress) {
-
-                    }
-                }).enqueue(new JsonCallback<LzyResponse<ServerModel>>() {
-                    @Override
-                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
-                        super.onSuccess(response, id);
-                    }
-                });
+                .onlyUpFile(file)
+                .enqueue(new UploadDialogCallback(this, file));
     }
 
     @Override

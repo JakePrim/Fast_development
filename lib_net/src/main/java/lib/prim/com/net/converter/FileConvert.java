@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import lib.prim.com.net.callback.Callback;
+import lib.prim.com.net.callback.base.Callback;
 import lib.prim.com.net.model.Progress;
 import lib.prim.com.net.utils.IOUtils;
 import lib.prim.com.net.utils.Utils;

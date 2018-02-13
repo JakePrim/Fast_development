@@ -9,7 +9,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import okio.BufferedSink;
-import lib.prim.com.net.callback.Callback;
+import lib.prim.com.net.callback.base.Callback;
 import okio.ForwardingSink;
 import okio.Okio;
 import okio.Sink;

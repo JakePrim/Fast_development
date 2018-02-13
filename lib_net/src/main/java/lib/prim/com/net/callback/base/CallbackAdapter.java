@@ -1,4 +1,4 @@
-package lib.prim.com.net.callback;
+package lib.prim.com.net.callback.base;
 
 import lib.prim.com.net.model.Progress;
 import okhttp3.Call;

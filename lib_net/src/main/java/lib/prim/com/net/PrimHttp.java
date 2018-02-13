@@ -40,7 +40,6 @@ public class PrimHttp {
     private HttpClient httpClient;                      //网络请求客户 默认为Okhttp
     private static String TAG = "PrimHttp";
     private WeakReference<Activity> weakActivity;       //用于获取在哪个Activity执行网络请求
-    private boolean isCache;
     private Handler mHandler;                                   //用于在主线程执行的调度器
     private WeakReference<Application> context;                 //全局上下文 WeakReference 弱引用
     private HttpParams mCommonParams;                           //全局公共请求参数
@@ -48,13 +47,19 @@ public class PrimHttp {
     public static final long DEFAULT_MILLISECONDS = 60000;      //默认的超时时间
     public static long REFRESH_TIME = 300;                      //回调刷新时间（单位ms）
 
+    private static PrimHttp mPrimHttp = null;
+
     public static PrimHttp getInstance() {
-        return PrimHolder.holder;
+        if (mPrimHttp == null) {
+            synchronized (PrimHttp.class) {
+                if (mPrimHttp == null) {
+                    mPrimHttp = new PrimHttp();
+                }
+            }
+        }
+        return mPrimHttp;
     }
 
-    private static class PrimHolder {
-        private static PrimHttp holder = new PrimHttp();
-    }
 
     PrimHttp() {
         mHandler = new Handler(Looper.getMainLooper());
@@ -76,12 +81,6 @@ public class PrimHttp {
     /** 初始化context */
     public PrimHttp with(Activity context) {
         this.weakActivity = new WeakReference<>(context);
-        return this;
-    }
-
-    /** 是否缓存 */
-    public PrimHttp cache(boolean isCache) {
-        this.isCache = isCache;
         return this;
     }
 

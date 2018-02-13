@@ -3,12 +3,15 @@ package lib.prim.com.net.utils;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import lib.prim.com.net.PrimHttp;
@@ -93,6 +96,16 @@ public class Utils {
         return new FormBody.Builder().build();
     }
 
+    /** 根据文件名获取MIME类型 */
+    public static MediaType guessMimeType(String fileName) {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        fileName = fileName.replace("#", "");   //解决文件名中含有#号异常的问题
+        String contentType = fileNameMap.getContentTypeFor(fileName);
+        if (contentType == null) {
+            return HttpParams.MEDIA_TYPE_STREAM;
+        }
+        return MediaType.parse(contentType);
+    }
 
     /** 通用的拼接请求头 */
     public static Request.Builder appendHeaders(Request.Builder builder, HttpHeaders headers) {
@@ -117,7 +130,7 @@ public class Utils {
         if (TextUtils.isEmpty(fileName)) fileName = getUrlFileName(url);
         if (TextUtils.isEmpty(fileName)) fileName = "unknowfile_" + System.currentTimeMillis();
         try {
-            URLDecoder.decode(fileName,"utf-8");
+            URLDecoder.decode(fileName, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -1,10 +1,9 @@
-package lib.prim.com.net.callback;
+package lib.prim.com.net.callback.custom;
 
 import java.io.File;
 
+import lib.prim.com.net.callback.base.CallbackAdapter;
 import lib.prim.com.net.converter.FileConvert;
-import lib.prim.com.net.model.Progress;
-import lib.prim.com.net.request.base.BaseRequest;
 import lib.prim.com.net.utils.Utils;
 import okhttp3.Response;
 
@@ -18,19 +17,19 @@ import okhttp3.Response;
  * 修订历史：
  * ================================================
  */
-public class FileCallback extends CallbackAdapter<File> {
+public class DownloadCallback extends CallbackAdapter<File> {
 
     private FileConvert fileConvert;
 
-    public FileCallback() {
+    public DownloadCallback() {
         this(null);
     }
 
-    public FileCallback(String fileName) {
+    public DownloadCallback(String fileName) {
         this(null, fileName);
     }
 
-    public FileCallback(String fileDir, String fileName) {
+    public DownloadCallback(String fileDir, String fileName) {
         fileConvert = new FileConvert(fileDir, fileName);
         fileConvert.setCallback(this);
     }

@@ -8,7 +8,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import lib.prim.com.net.PrimHttp;
-import lib.prim.com.net.callback.Callback;
+import lib.prim.com.net.callback.base.Callback;
 import lib.prim.com.net.converter.Converter;
 import lib.prim.com.net.model.HttpHeaders;
 import lib.prim.com.net.model.HttpParams;

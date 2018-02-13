@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Window;
 
+import lib.prim.com.net.callback.custom.JsonCallback;
 import okhttp3.Call;
 import lib.prim.com.net.request.base.BaseRequest;
 
@@ -12,11 +13,12 @@ import lib.prim.com.net.request.base.BaseRequest;
  * 作    者：linksus
  * 版    本：1.0
  * 创建日期：2/10 0010
- * 描    述：对于网络请求是否需要弹出进度对话框
+ * 描    述：对于json网络请求是否需要弹出加载对话框
+ * 具体布局可自己修改实现
  * 修订历史：
  * ================================================
  */
-public abstract class DialogCallback<T> extends JsonCallback<T> {
+public abstract class JsonDialogCallback<T> extends JsonCallback<T> {
     private ProgressDialog dialog;
 
     private void initDialog(Activity activity) {
@@ -27,7 +29,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
         dialog.setMessage("请求网络中...");
     }
 
-    public DialogCallback(Activity activity) {
+    public JsonDialogCallback(Activity activity) {
         super();
         initDialog(activity);
     }
