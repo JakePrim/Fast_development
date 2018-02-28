@@ -6,12 +6,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
+
+import java.util.Timer;
 
 import lib.prim.com.net.PrimHttp;
 import lib.prim.com.net.callback.DialogCallback;
@@ -49,6 +52,7 @@ public class Main2Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         log = (TextView) findViewById(R.id.log);
+        log.setMovementMethod(ScrollingMovementMethod.getInstance());
         initView();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +62,18 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
 
-
+        PrimHttp.getInstance()
+                .<LzyResponse<ServerModel>>get("http://server.jeasonlzy.com/OkHttpUtils/jsonObject")
+                .id(0)
+                .tag(TAG)
+                .params("id", "0")
+                .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this) {
+                    @Override
+                    public void onSuccess(LzyResponse<ServerModel> response, int id) {
+                        super.onSuccess(response, id);
+                        PrimLogger.e(TAG, response.toString());
+                    }
+                });
     }
 
     private void sendRequest(View view) {
@@ -112,21 +127,14 @@ public class Main2Activity extends AppCompatActivity {
                                             "\n .tag(TAG))" +
                                             "\n .params(\"id\", \"0\") " +
                                             "\n .enqueue(new DialogCallback<LzyResponse<ServerModel>>(this)");
-                                    log.setText(sf.toString());
-                                }
-
-                                @Override
-                                public LzyResponse<ServerModel> convertResponse(Response response, int id) throws Throwable {
-                                    sf.append("\n 数据转换:convertResponse()" + "\n 转为json:").append(response.body().string()).append("\n ");
-                                    log.setText(sf.toString());
-                                    return super.convertResponse(response, id);
+                                    log.append(sf.toString());
                                 }
 
                                 @Override
                                 public void onError(Call call, Exception e, int id) {
                                     super.onError(call, e, id);
                                     sf.append("\n 请求失败:onError()");
-                                    log.setText(sf.toString());
+                                    log.append(sf.toString());
                                 }
 
                                 @Override

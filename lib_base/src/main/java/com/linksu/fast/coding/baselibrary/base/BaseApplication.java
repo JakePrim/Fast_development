@@ -78,7 +78,7 @@ public abstract class BaseApplication extends Application {
                 .addCommonParams(params)
                 .setSSLParams(HttpsUtils.getSslSocketFactory(new SafeTrustManager()))
                 .cookieJar(CookieJar.NO_COOKIES)
-                .hostnameVerifier(new SafeHostnameVerifier());//初始化网络
+                .hostnameVerifier(new SafeHostnameVerifier());
     }
 
     /** log 的总开关 交给子类去决定 */

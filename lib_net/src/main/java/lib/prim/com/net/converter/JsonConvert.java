@@ -1,5 +1,7 @@
 package lib.prim.com.net.converter;
 
+import android.util.Log;
+
 import com.google.gson.stream.JsonReader;
 
 import org.json.JSONArray;
@@ -28,6 +30,8 @@ public class JsonConvert<T> implements Converter<T> {
     private Type type;
     private Class<T> clazz;
 
+    private static final String TAG = "JsonConvert";
+
     public JsonConvert() {
     }
 
@@ -41,6 +45,7 @@ public class JsonConvert<T> implements Converter<T> {
 
     @Override
     public T convertResponse(Response response, int id) throws Throwable {
+        Log.e(TAG, "convertResponse: ");
         if (type == null) {
             if (clazz == null) {
                 // 如果没有通过构造函数传进来，就自动解析父类泛型的真实类型（有局限性，继承后就无法解析到）
@@ -51,6 +56,7 @@ public class JsonConvert<T> implements Converter<T> {
             }
         }
         if (type instanceof ParameterizedType) {
+            Log.e(TAG, "convertResponse: ");
             return parseParametrizedType(response, (ParameterizedType) type);
         } else if (type instanceof Class) {
             return parseClass(response, (Class<?>) type);
@@ -105,12 +111,14 @@ public class JsonConvert<T> implements Converter<T> {
             return t;
         } else {
             if (typeArgument == Void.class) {
+                Log.e(TAG, "parseParametrizedType: 1");
                 // 泛型格式如下： new JsonCallback<LzyResponse<Void>>(this)
                 SimpleResponse simpleResponse = GsonUtill.fromJson(jsonReader, SimpleResponse.class);
                 response.close();
                 //noinspection unchecked
                 return (T) simpleResponse.toLzyResponse();
             } else {
+                Log.e(TAG, "parseParametrizedType: 2");
                 // 泛型格式如下： new JsonCallback<LzyResponse<内层JavaBean>>(this)
                 LzyResponse lzyResponse = GsonUtill.fromJson(jsonReader, type);
                 response.close();

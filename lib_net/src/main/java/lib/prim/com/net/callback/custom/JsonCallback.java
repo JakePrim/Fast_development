@@ -54,6 +54,7 @@ public class JsonCallback<T> extends CallbackAdapter<T> {
      */
     @Override
     public T convertResponse(final Response response, final int id) throws Throwable {
+        Log.e(TAG, "convertResponse: ");
         if (type == null) {
             if (clazz == null) {
                 Type genType = getClass().getGenericSuperclass();

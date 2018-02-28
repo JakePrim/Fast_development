@@ -61,7 +61,7 @@ public class PrimHttp {
     }
 
 
-    PrimHttp() {
+    private PrimHttp() {
         mHandler = new Handler(Looper.getMainLooper());
         httpClient = new OkClient();
     }

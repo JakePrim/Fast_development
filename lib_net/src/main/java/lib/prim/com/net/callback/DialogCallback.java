@@ -8,6 +8,7 @@ import android.view.Window;
 import lib.prim.com.net.callback.custom.JsonCallback;
 import okhttp3.Call;
 import lib.prim.com.net.request.base.BaseRequest;
+import okhttp3.Response;
 
 /**
  * ================================================
@@ -47,6 +48,10 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     @Override
     public void onError(Call call, Exception e, int id) {
         super.onError(call, e, id);
+        //网络请求结束后关闭对话框
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 
     @Override
