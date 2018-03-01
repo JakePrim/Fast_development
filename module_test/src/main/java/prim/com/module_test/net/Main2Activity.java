@@ -12,9 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.linksu.fast.coding.baselibrary.utils.PrimLogger;
-
-import java.util.Timer;
+import lib.linksu.fast.coding.baselibrary.utils.PrimLogger;
 
 import lib.prim.com.net.PrimHttp;
 import lib.prim.com.net.callback.DialogCallback;

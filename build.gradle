@@ -5,14 +5,7 @@ buildscript {
     ext.anko_version = '0.10.1'
     repositories {
         jcenter()
-        //这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
-        }
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -25,14 +18,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        //这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
-        }
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        google()
     }
 }
 
@@ -40,7 +26,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-def supportLibVersion = '25.3.1'
+def supportLibVersion = '27.0.2'
+def constraintLayout = '1.0.2'
 def okhttpVersion = '3.9.1'
 def glideVersion = '4.0.0'
 def eventbusVersion = '3.0.0'
@@ -53,10 +40,10 @@ def timber = '4.6.1'
 
 ext {
     sdkVersion = [
-            COMPILE_SDK_VERSION: 25,
-            BUILDTOOLS_VERSION : "25.0.3",
+            COMPILE_SDK_VERSION: 27,
+            BUILDTOOLS_VERSION : "27.0.2",
             MIN_SDK_VERSION    : 15,
-            TARGET_SDK_VERSION : 23
+            TARGET_SDK_VERSION : 27
     ]
 
     projextVersion = [
@@ -76,7 +63,7 @@ project.ext {
             "cardview-v7"                : "com.android.support:cardview-v7:${supportLibVersion}",
             "support-annotations"        : "com.android.support:support-annotations:${supportLibVersion}",
             "palette-v7"                 : "com.android.support:palette-v7:${supportLibVersion}",
-            "constraint-layout"          : "com.android.support.constraint:constraint-layout:1.0.0-alpha7",
+            "constraint-layout"          : "com.android.support.constraint:constraint-layout:${constraintLayout}",
 
             //okHttp3
             "okhttp3"                    : "com.squareup.okhttp3:okhttp:${okhttpVersion}",

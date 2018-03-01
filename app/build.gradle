@@ -41,7 +41,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     // LeanCloud 基础包
 //    compile('cn.leancloud.android:avoscloud-sdk:v4.4.4')
     // 推送与实时聊天需要的包
@@ -62,8 +62,8 @@ dependencies {
 //    // LeanCloud 应用内搜索包
 //    compile ('cn.leancloud.android:avoscloud-search:v4.4.4@aar')
     if (!isBuildModule.toBoolean()) {
-        compile project(':module_common')
+        implementation project(':module_common')
     } else {
-        compile project(':lib_base')
+        implementation project(':lib_base')
     }
 }

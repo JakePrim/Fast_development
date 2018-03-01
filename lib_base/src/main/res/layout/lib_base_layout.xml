@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.linksu.fast.coding.baselibrary.widget.MultipleStatusView
+    <lib.linksu.fast.coding.baselibrary.widget.MultipleStatusView
         android:id="@+id/main_multiplestatusview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,5 +13,5 @@
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.linksu.fast.coding.baselibrary.widget.MultipleStatusView>
+    </lib.linksu.fast.coding.baselibrary.widget.MultipleStatusView>
 </FrameLayout>

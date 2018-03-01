@@ -1,6 +1,6 @@
 package prim.com.module_test;
 
-import com.linksu.fast.coding.baselibrary.base.BaseApplication;
+import lib.linksu.fast.coding.baselibrary.base.BaseApplication;
 
 /**
  * ================================================
