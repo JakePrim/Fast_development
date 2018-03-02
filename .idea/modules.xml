@@ -7,6 +7,7 @@
       <module fileurl="file://D:\demo\Fast_development\lib_base\baselibrary.iml" filepath="D:\demo\Fast_development\lib_base\baselibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib_base/lib_base.iml" filepath="$PROJECT_DIR$/lib_base/lib_base.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib_db/lib_db.iml" filepath="$PROJECT_DIR$/lib_db/lib_db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib_img/lib_img.iml" filepath="$PROJECT_DIR$/lib_img/lib_img.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib_net/lib_net.iml" filepath="$PROJECT_DIR$/lib_net/lib_net.iml" />
       <module fileurl="file://$PROJECT_DIR$/module_common/module_common.iml" filepath="$PROJECT_DIR$/module_common/module_common.iml" />
       <module fileurl="file://$PROJECT_DIR$/module_test/module_test.iml" filepath="$PROJECT_DIR$/module_test/module_test.iml" />

@@ -1,14 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
-    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
     defaultConfig {
-        minSdkVersion sdkVersion.MIN_SDK_VERSION
-        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        applicationId projextVersion.applicationId
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode projextVersion.VERSION_CODE
         versionName projextVersion.VERSION_NAME
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags ""
@@ -41,26 +43,26 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     // LeanCloud 基础包
-//    compile('cn.leancloud.android:avoscloud-sdk:v4.4.4')
+    //    compile('cn.leancloud.android:avoscloud-sdk:v4.4.4')
     // 推送与实时聊天需要的包
-//    compile ('cn.leancloud.android:avoscloud-push:v4.4.4@aar'){transitive = true}
-//
-//    // LeanCloud 统计包
-//    compile ('cn.leancloud.android:avoscloud-statistics:v4.4.4')
-//
-//    // LeanCloud 用户反馈包
-//    compile ('cn.leancloud.android:avoscloud-feedback:v4.4.4@aar')
-//
-//    // avoscloud-sns：LeanCloud 第三方登录包
-//    compile ('cn.leancloud.android:avoscloud-sns:v4.4.4@aar')
-//    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
-//    // 目前新浪微博官方只提供 jar 包的集成方式
-//    // 请手动下载新浪微博 SDK 的 jar 包，将其放在 libs 目录下进行集成
-//
-//    // LeanCloud 应用内搜索包
-//    compile ('cn.leancloud.android:avoscloud-search:v4.4.4@aar')
+    //    compile ('cn.leancloud.android:avoscloud-push:v4.4.4@aar'){transitive = true}
+    //
+    //    // LeanCloud 统计包
+    //    compile ('cn.leancloud.android:avoscloud-statistics:v4.4.4')
+    //
+    //    // LeanCloud 用户反馈包
+    //    compile ('cn.leancloud.android:avoscloud-feedback:v4.4.4@aar')
+    //
+    //    // avoscloud-sns：LeanCloud 第三方登录包
+    //    compile ('cn.leancloud.android:avoscloud-sns:v4.4.4@aar')
+    //    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
+    //    // 目前新浪微博官方只提供 jar 包的集成方式
+    //    // 请手动下载新浪微博 SDK 的 jar 包，将其放在 libs 目录下进行集成
+    //
+    //    // LeanCloud 应用内搜索包
+    //    compile ('cn.leancloud.android:avoscloud-search:v4.4.4@aar')
     if (!isBuildModule.toBoolean()) {
         implementation project(':module_common')
     } else {

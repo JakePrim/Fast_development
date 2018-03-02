@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
-    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
 
     defaultConfig {
-        minSdkVersion sdkVersion.MIN_SDK_VERSION
-        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode projextVersion.VERSION_CODE
         versionName projextVersion.VERSION_NAME
     }
@@ -21,15 +21,40 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation rootProject.ext.dependencies["appcompat-v7"]
-    implementation rootProject.ext.dependencies["design"]
-    implementation rootProject.ext.dependencies["recyclerview-v7"]
-    implementation rootProject.ext.dependencies["cardview-v7"]
-    implementation rootProject.ext.dependencies["glide"]
-    implementation rootProject.ext.dependencies["eventbus"]
-    implementation rootProject.ext.dependencies["constraint-layout"]
-    implementation rootProject.ext.dependencies["palette-v7"]
-    implementation rootProject.ext.dependencies["support-annotations"]
-//    compile rootProject.ext.dependencies["timber"]
+
+    // Support components
+    implementation deps.support.app_compat
+    implementation deps.support.design
+    implementation deps.support.recyclerview
+    implementation deps.support.cardview
+    implementation deps.support.palette_v7
+    implementation deps.support.constraint_layout
+    implementation deps.support.annotations
+
+    // Architecture components
+    implementation deps.lifecycle.extensions
+    implementation deps.paging
+    //room 数据库处理的lib包
+    implementation project(":lib_db")
+    annotationProcessor deps.lifecycle.compiler
+
+    // dagger2
+    implementation deps.dagger.runtime
+    implementation deps.dagger.android
+    implementation deps.dagger.android_support
+    annotationProcessor deps.dagger.compiler
+    annotationProcessor deps.dagger.android_support_compiler
+
+    // other
+    implementation deps.eventbus
+    implementation deps.timber
+    implementation deps.butterknife
+    implementation deps.junit
+
+    // 网络请求处理的lib包
     implementation project(":lib_net")
+
+    // 图片处理的lib包
+    implementation project(":lib_img")
+
 }

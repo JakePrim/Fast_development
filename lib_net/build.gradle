@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
-    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
 
     defaultConfig {
-        minSdkVersion sdkVersion.MIN_SDK_VERSION
-        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode projextVersion.VERSION_CODE
         versionName projextVersion.VERSION_NAME
     }
@@ -21,10 +21,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation rootProject.ext.dependencies["okhttp3"]
-    implementation rootProject.ext.dependencies["okhttp3-logging-interceptor"]
-    implementation rootProject.ext.dependencies["okio"]
-    implementation rootProject.ext.dependencies["gson"]
-    implementation rootProject.ext.dependencies["rxandroid"]
-    implementation rootProject.ext.dependencies["rxjava"]
+    implementation deps.http.okhttp
+    implementation deps.http.okhttp_logging
+    implementation deps.http.okio
+    implementation deps.gson
+//    implementation rootProject.ext.dependencies["rxandroid"]
+//    implementation rootProject.ext.dependencies["rxjava"]
 }

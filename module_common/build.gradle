@@ -5,12 +5,12 @@ if (isBuildModule.toBoolean()) {
 }
 
 android {
-    compileSdkVersion sdkVersion.COMPILE_SDK_VERSION
-    buildToolsVersion sdkVersion.BUILDTOOLS_VERSION
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
 
     defaultConfig {
-        minSdkVersion sdkVersion.MIN_SDK_VERSION
-        targetSdkVersion sdkVersion.TARGET_SDK_VERSION
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode projextVersion.VERSION_CODE
         versionName projextVersion.VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
