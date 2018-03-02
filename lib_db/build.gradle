@@ -24,4 +24,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.room.runtime
     annotationProcessor deps.room.compiler
+    testImplementation deps.room.testing
 }

@@ -25,6 +25,8 @@ dependencies {
     implementation deps.http.okhttp_logging
     implementation deps.http.okio
     implementation deps.gson
+    //room 数据库处理的lib包
+    implementation project(":lib_db")
 //    implementation rootProject.ext.dependencies["rxandroid"]
 //    implementation rootProject.ext.dependencies["rxjava"]
 }

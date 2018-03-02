@@ -34,8 +34,6 @@ dependencies {
     // Architecture components
     implementation deps.lifecycle.extensions
     implementation deps.paging
-    //room 数据库处理的lib包
-    implementation project(":lib_db")
     annotationProcessor deps.lifecycle.compiler
 
     // dagger2
